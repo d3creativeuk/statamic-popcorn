@@ -143,6 +143,71 @@ class UploadTest extends TestCase
     }
 
     #[Test]
+    public function a_bare_403_is_the_token()
+    {
+        Http::fake([$this->muxUrl('/video/v1/uploads') => Http::response(['error' => ['type' => 'forbidden', 'messages' => ['Forbidden']]], 403)]);
+
+        $this->actingAs($this->superUser())
+            ->postJson(cp_route('popcorn.mux.uploads.store'), ['title' => 'Tour'])
+            ->assertStatus(502)
+            ->assertJson(['message' => 'Mux refused the access token. Check MUX_TOKEN_ID and MUX_TOKEN_SECRET, and that the token has Mux Video write access.']);
+    }
+
+    /**
+     * Mux does not document what it answers when a plan's video limit is
+     * reached, so these use a likely wording. What matters is that the
+     * reason is shown with advice, and never blamed on the token.
+     */
+    #[Test]
+    public function a_plan_limit_is_shown_with_what_to_do_not_blamed_on_the_token()
+    {
+        Http::fake([$this->muxUrl('/video/v1/uploads') => Http::response(['error' => ['type' => 'forbidden', 'messages' => ['Free plan accounts are limited to 10 assets']]], 403)]);
+
+        $this->actingAs($this->superUser())
+            ->postJson(cp_route('popcorn.mux.uploads.store'), ['title' => 'Tour'])
+            ->assertStatus(502)
+            ->assertExactJson(['message' => 'Mux could not create an upload. Free plan accounts are limited to 10 assets. Your Mux plan may have reached its limit: upgrade it, or delete videos you no longer need, at dashboard.mux.com.']);
+    }
+
+    #[Test]
+    public function a_plan_limit_on_a_402_is_explained_too()
+    {
+        Http::fake([$this->muxUrl('/video/v1/uploads') => Http::response(['error' => ['type' => 'payment_required', 'messages' => ['Asset limit exceeded. Please upgrade your plan.']]], 402)]);
+
+        $this->actingAs($this->superUser())
+            ->postJson(cp_route('popcorn.mux.uploads.store'), ['title' => 'Tour'])
+            ->assertStatus(502)
+            ->assertExactJson(['message' => 'Mux could not create an upload. Asset limit exceeded. Please upgrade your plan. Your Mux plan may have reached its limit: upgrade it, or delete videos you no longer need, at dashboard.mux.com.']);
+    }
+
+    #[Test]
+    public function a_limit_that_shows_only_once_the_file_has_arrived_is_explained_in_the_status()
+    {
+        $errored = $this->fixture('upload-errored');
+        $errored['data']['error']['message'] = 'This account has reached its asset limit';
+
+        Http::fake([$this->muxUrl('/video/v1/uploads/*') => Http::response($errored)]);
+
+        $this->actingAs($this->superUser())
+            ->getJson(cp_route('popcorn.mux.uploads.show', 'UploadNew00000000000000000000000000000001'))
+            ->assertOk()
+            ->assertJson([
+                'status' => 'errored',
+                'error' => 'This account has reached its asset limit. Your Mux plan may have reached its limit: upgrade it, or delete videos you no longer need, at dashboard.mux.com.',
+            ]);
+    }
+
+    #[Test]
+    public function an_ordinary_error_gets_no_advice_about_plans()
+    {
+        Http::fake([$this->muxUrl('/video/v1/uploads/*') => Http::response($this->fixture('upload-errored'))]);
+
+        $this->actingAs($this->superUser())
+            ->getJson(cp_route('popcorn.mux.uploads.show', 'UploadNew00000000000000000000000000000001'))
+            ->assertJson(['error' => 'The file you uploaded was not a recognised video.']);
+    }
+
+    #[Test]
     public function muxs_own_reason_is_passed_on()
     {
         Http::fake([$this->muxUrl('/video/v1/uploads') => Http::response($this->fixture('error-invalid'), 400)]);

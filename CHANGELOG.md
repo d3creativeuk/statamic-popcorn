@@ -17,3 +17,4 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 - `{{ popcorn:player }}` and `{{ popcorn:scripts }}` tags for playing a video with Mux Player. The player is a block element, so a rounded box around it rounds all four corners.
 - A `PopcornVideo` GraphQL type.
 - The `use popcorn` permission.
+- When Mux refuses an upload, for example because a free plan has reached its 10 videos, the field shows Mux's reason with advice, and never blames the access token.

@@ -2,6 +2,8 @@
 
 namespace D3Creative\Popcorn\Mux;
 
+use D3Creative\Popcorn\Exceptions\MuxRequestFailed;
+
 /**
  * Turns Mux's asset records into what the field and templates use, and builds
  * the public URLs Mux serves a playback ID from.
@@ -45,7 +47,7 @@ class MuxVideo
             // Mux sends a Unix timestamp as a string.
             'created_at' => isset($asset['created_at']) ? (int) $asset['created_at'] : null,
             'thumbnail' => $playbackId ? static::thumbnailUrl($playbackId, ['width' => 320, 'height' => 180, 'fit_mode' => 'smartcrop']) : null,
-            'error' => $asset['errors']['messages'][0] ?? null,
+            'error' => MuxRequestFailed::withAdvice($asset['errors']['messages'][0] ?? null),
         ];
     }
 

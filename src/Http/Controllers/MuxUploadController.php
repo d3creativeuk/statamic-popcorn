@@ -3,6 +3,7 @@
 namespace D3Creative\Popcorn\Http\Controllers;
 
 use D3Creative\Popcorn\Assets\VideoAssets;
+use D3Creative\Popcorn\Exceptions\MuxRequestFailed;
 use D3Creative\Popcorn\Jobs\SendAssetToMux;
 use D3Creative\Popcorn\Mux\MuxClient;
 use D3Creative\Popcorn\Mux\MuxVideo;
@@ -95,6 +96,8 @@ class MuxUploadController extends Controller
             $result['asset_status'] = $asset['status'] ?? null;
             $result['error'] ??= $asset['errors']['messages'][0] ?? null;
         }
+
+        $result['error'] = MuxRequestFailed::withAdvice($result['error']);
 
         return response()->json($result);
     }

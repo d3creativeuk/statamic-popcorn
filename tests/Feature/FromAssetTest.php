@@ -85,6 +85,24 @@ class FromAssetTest extends TestCase
     }
 
     #[Test]
+    public function a_library_video_refused_by_mux_is_never_sent()
+    {
+        $this->asset('videos/tour.mp4');
+
+        Http::fake([
+            $this->muxUrl('/video/v1/uploads') => Http::response(['error' => ['type' => 'forbidden', 'messages' => ['Free plan accounts are limited to 10 assets']]], 403),
+            'storage.googleapis.com/*' => Http::response('', 200),
+        ]);
+
+        $this->actingAs($this->superUser())
+            ->postJson(cp_route('popcorn.mux.uploads.from-asset'), ['asset' => 'assets::videos/tour.mp4'])
+            ->assertStatus(502)
+            ->assertJson(['message' => 'Mux could not create an upload. Free plan accounts are limited to 10 assets. Your Mux plan may have reached its limit: upgrade it, or delete videos you no longer need, at dashboard.mux.com.']);
+
+        Http::assertNotSent(fn (Request $request) => $request->method() === 'PUT');
+    }
+
+    #[Test]
     public function a_file_that_is_not_a_video_is_refused_before_mux_is_asked()
     {
         $this->asset('photos/cat.jpg');

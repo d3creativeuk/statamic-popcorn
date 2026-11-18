@@ -18,7 +18,7 @@
     "name": "rolldown-runtime"
   },
   "resources/js/addon.js": {
-    "file": "assets/addon-BUD3eWEj.js",
+    "file": "assets/addon-Cx-8b-gw.js",
     "name": "addon",
     "src": "resources/js/addon.js",
     "isEntry": true,
@@ -27,7 +27,7 @@
       "_mux-uploader-Wc6-4rub.js"
     ],
     "css": [
-      "assets/addon-BS7k7hj5.css"
+      "assets/addon-Ls61GGZh.css"
     ]
   }
 }

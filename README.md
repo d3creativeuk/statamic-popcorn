@@ -134,6 +134,10 @@ php artisan vendor:publish --tag=statamic-popcorn-config
 | `player.script` | jsDelivr's `@mux/mux-player@3` | Where `{{ popcorn:scripts }}` loads Mux Player from |
 | `poll_interval` | `3000` | Milliseconds between status checks while Mux receives or prepares a video |
 
+## When Mux refuses
+
+If Mux refuses an upload, the field shows Mux's own reason and puts the drop zone back, so nothing is left half-done. A refusal that mentions a limit or the plan, such as the 10-video cap on Mux's free plan, also says how to deal with it: upgrade the plan or delete videos you no longer need at dashboard.mux.com. Mux checks its limits before any of the file is sent, or once the file has arrived, and the field reports either. A video already in a field keeps playing.
+
 ## What Popcorn does not do
 
 - **Signed playback.** Videos are created with a public playback policy, and videos with only signed playback IDs are not listed.

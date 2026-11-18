@@ -68,10 +68,14 @@ function wait() {
     });
 }
 
-// A session or permission problem will not fix itself, so polling stops;
-// anything else (a dropped connection, a busy moment at Mux) is retried.
-function isFinal(e) {
-    return [401, 403, 404, 419].includes(e?.status);
+// A session or permission problem will not fix itself, so polling stops at
+// once. Anything else (a dropped connection, a busy moment at Mux) is tried
+// again, but not forever: an answer Mux keeps refusing ends the wait with
+// its message instead of leaving the field waiting.
+const MAX_FAILURES = 5;
+
+function isFinal(e, failures) {
+    return [401, 403, 404, 419].includes(e?.status) || failures >= MAX_FAILURES;
 }
 
 function fail(message) {
@@ -96,15 +100,23 @@ function cancelUpload() {
     pendingTitle.value = '';
 }
 
-// Mux Uploader calls this for the URL to send the file to.
+// Why the upload URL was refused, if it was. Mux Uploader reports that
+// failure too, but as "Failed to get endpoint: …", so this is shown instead.
+let refusal = null;
+
+// Mux Uploader calls this for the URL to send the file to. This is where a
+// refusal from Mux arrives before any of the file has been sent, such as a
+// plan that has reached its limit.
 async function uploadUrl() {
+    refusal = null;
+
     try {
         const data = await http('POST', urls.value.upload, { title: pendingTitle.value.trim() });
         uploadId = data.upload_id;
 
         return data.url;
     } catch (e) {
-        error.value = e.message;
+        refusal = e.message;
         throw e;
     }
 }
@@ -127,7 +139,8 @@ function uploadFinished() {
 }
 
 function uploadFailed(event) {
-    fail(event?.detail?.message || __('The upload failed. Try again.'));
+    fail(refusal || event?.detail?.message || __('The upload failed. Try again.'));
+    refusal = null;
 }
 
 // ---------------------------------------------------------------------------
@@ -151,6 +164,8 @@ async function sendFromLibrary(asset) {
 // ---------------------------------------------------------------------------
 
 async function follow(id, title) {
+    let failures = 0;
+
     while (!unmounted) {
         await wait();
 
@@ -162,8 +177,9 @@ async function follow(id, title) {
 
         try {
             data = await http('GET', url('uploadStatus', id));
+            failures = 0;
         } catch (e) {
-            if (isFinal(e)) {
+            if (isFinal(e, ++failures)) {
                 return fail(e.message);
             }
 
@@ -201,6 +217,7 @@ async function follow(id, title) {
 }
 
 async function waitUntilReady(assetId) {
+    let failures = 0;
     processing.value = true;
 
     while (!unmounted && props.value?.asset_id === assetId) {
@@ -208,6 +225,7 @@ async function waitUntilReady(assetId) {
 
         try {
             const video = await http('GET', url('asset', assetId));
+            failures = 0;
 
             if (video.status === 'ready') {
                 processing.value = false;
@@ -220,7 +238,9 @@ async function waitUntilReady(assetId) {
                 return fail(video.error);
             }
         } catch (e) {
-            if (isFinal(e)) {
+            // The video is already in the field and saved with the entry, so
+            // giving up here only stops the "preparing" notice.
+            if (isFinal(e, ++failures)) {
                 processing.value = false;
 
                 return;
