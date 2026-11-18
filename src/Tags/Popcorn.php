@@ -6,18 +6,30 @@ use Statamic\Fields\Value;
 use Statamic\Tags\Tags;
 
 /**
- * Plays a Popcorn video on the front end with Mux Player.
+ * Plays a Popcorn video on the front end with Video.js and its Mux media
+ * element, the player Mux recommends.
  *
  *   {{ popcorn:scripts }}   once, in the layout's <head>
  *   {{ popcorn:player :video="hero_video" accent-color="#0061ff" }}
  *
- * Every parameter other than "video" becomes an attribute on <mux-player>, so
- * anything Mux Player supports can be set from the template. A parameter set
- * to true becomes a bare attribute (autoplay, muted, loop); false leaves it
- * out.
+ * The player is three elements: <video-player> holds the state, <video-skin>
+ * draws the controls, and <mux-video> plays the stream. A <mux-data> element
+ * is added only when tracking is on. Parameters go where they mean
+ * something: "style" and "class" to the skin, "accent-color" to the skin's
+ * accent, "metadata-*" to Mux Data, and the rest (autoplay, muted, loop,
+ * poster-time and so on) to <mux-video>. A parameter set to true becomes a
+ * bare attribute; false leaves it out.
  */
 class Popcorn extends Tags
 {
+    /**
+     * The files {{ popcorn:scripts }} loads from the CDN release. Mux Data's
+     * is only loaded when it can be used.
+     */
+    protected const SCRIPTS = ['video.js', 'media/mux-video.js'];
+
+    protected const TRACKING_SCRIPT = 'extensions/mux-data.js';
+
     public function player(): string
     {
         $video = $this->params->get('video');
@@ -30,58 +42,86 @@ class Popcorn extends Tags
             return '';
         }
 
-        $title = $video['title'] ?? null;
+        $title = filled($video['title'] ?? null) ? $video['title'] : null;
+        $params = $this->params->except(['video', 'style', 'class', 'accent-color', 'tracking', 'cookies'])->all();
 
-        // The title always goes to Mux Data, so views are reported against it.
-        // It is only drawn on the player when the editor asked for that.
-        $attributes = array_filter([
-            'playback-id' => $video['playback_id'],
-            'stream-type' => 'on-demand',
+        $player = $this->attributes([
+            'content-title' => ($video['show_title'] ?? false) ? $title : null,
+        ]);
+
+        $skin = $this->attributes([
+            'class' => $this->params->get('class'),
+            'style' => $this->style($this->params->get('style'), $this->params->get('accent-color')),
+        ]);
+
+        $media = $this->attributes([
+            'src' => 'https://stream.mux.com/'.rawurlencode($video['playback_id']).'.m3u8',
+            'playsinline' => true,
+            'crossorigin' => 'anonymous',
+            ...array_filter($params, fn ($name) => ! str_starts_with((string) $name, 'metadata-'), ARRAY_FILTER_USE_KEY),
+        ]);
+
+        $data = $this->tracking() ? '<mux-data'.$this->attributes([
+            // Views are reported against the title and the Mux asset.
             'metadata-video-title' => $title,
             'metadata-video-id' => $video['asset_id'] ?? null,
-            'title' => ($video['show_title'] ?? false) ? $title : null,
-        ], fn ($value) => filled($value));
+            ...array_filter($params, fn ($name) => str_starts_with((string) $name, 'metadata-'), ARRAY_FILTER_USE_KEY),
+            'disable-cookies' => ! $this->setting('cookies'),
+        ]).'></mux-data>' : '';
 
-        // The site's privacy defaults. They go in before the template's own
-        // parameters, so disable-tracking="false" in a template wins.
-        foreach (['disable-tracking' => 'disable_tracking', 'disable-cookies' => 'disable_cookies'] as $attribute => $key) {
-            if (filter_var(config("statamic-popcorn.player.{$key}"), FILTER_VALIDATE_BOOLEAN)) {
-                $attributes[$attribute] = true;
-            }
+        return "<video-player{$player}><video-skin{$skin}><mux-video{$media}></mux-video>{$data}</video-skin></video-player>";
+    }
+
+    public function scripts(): string
+    {
+        $cdn = rtrim((string) config('statamic-popcorn.player.cdn'), '/');
+
+        if ($cdn === '') {
+            return '';
         }
 
-        foreach ($this->params->except('video')->all() as $name => $value) {
-            $attributes[$name] = $value;
-        }
+        $files = [...self::SCRIPTS, ...($this->tracking() ? [self::TRACKING_SCRIPT] : [])];
 
-        $attributes['style'] = $this->style($attributes['style'] ?? null);
-
-        return '<mux-player'.$this->attributes($attributes).'></mux-player>';
+        return collect($files)
+            ->map(fn ($file) => '<script type="module" src="'.e("{$cdn}/{$file}").'"></script>')
+            ->implode("");
     }
 
     /**
-     * Mux Player is inline-block, so it sits on a line of text and leaves a
-     * gap below it the height of the text's descender. Inside a box with
-     * rounded corners and overflow hidden, that gap is where the bottom
-     * corners are drawn, so they never show on the video. Block removes the
-     * gap. A template that sets its own display keeps it.
+     * Mux Data is off unless the site turns it on, and a template can turn
+     * it on or off for one player (or, on popcorn:scripts, for the page).
      */
-    protected function style($style): string
+    protected function tracking(): bool
+    {
+        return $this->setting('tracking');
+    }
+
+    protected function setting(string $name): bool
+    {
+        $value = $this->params->has($name) ? $this->params->get($name) : config("statamic-popcorn.player.{$name}");
+
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    /**
+     * The skin is given display: block, as Mux's own example does, so it
+     * fills its box and leaves no gap below it the height of a text
+     * descender (which would sit under rounded bottom corners). A template
+     * that sets its own display keeps it.
+     */
+    protected function style($style, $accent): string
     {
         $style = trim((string) ($style === true ? '' : $style));
+
+        if (is_string($accent) && $accent !== '') {
+            $style = trim('--media-accent-color: '.$accent.'; '.$style);
+        }
 
         if (preg_match('/(^|;)\s*display\s*:/i', $style)) {
             return $style;
         }
 
         return trim('display: block; '.$style);
-    }
-
-    public function scripts(): string
-    {
-        $src = config('statamic-popcorn.player.script');
-
-        return $src ? '<script src="'.e($src).'" defer></script>' : '';
     }
 
     protected function attributes(array $attributes): string
@@ -91,7 +131,7 @@ class Popcorn extends Tags
         foreach ($attributes as $name => $value) {
             // Attribute names come from the template, so anything that is not
             // a plain name is dropped rather than escaped into the markup.
-            if (! preg_match('/^[a-zA-Z_:][a-zA-Z0-9_.:-]*$/', (string) $name) || $value === false || $value === null) {
+            if (! preg_match('/^[a-zA-Z_:][a-zA-Z0-9_.:-]*$/', (string) $name) || $value === false || $value === null || $value === '') {
                 continue;
             }
 

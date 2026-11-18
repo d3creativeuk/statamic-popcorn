@@ -23,6 +23,7 @@ defineReplicatorPreview(() => props.value?.title || props.value?.playback_id || 
 const meta = computed(() => props.meta ?? {});
 const urls = computed(() => meta.value.urls ?? {});
 const hasVideo = computed(() => !!props.value?.playback_id);
+const streamUrl = computed(() => (hasVideo.value ? `https://stream.mux.com/${encodeURIComponent(props.value.playback_id)}.m3u8` : null));
 const allowReplacing = computed(() => props.config.allow_reupload !== false);
 const canManage = computed(() => !!meta.value.can && !!meta.value.configured && !isReadOnly.value);
 const canPick = computed(() => canManage.value && props.config.allow_assets === true && (meta.value.containers ?? []).length > 0);
@@ -302,12 +303,11 @@ function remove() {
         <!-- A video is chosen -->
         <div v-if="hasVideo" class="space-y-3">
             <div class="popcorn-player">
-                <mux-player
-                    :key="playerKey"
-                    :playback-id="value.playback_id"
-                    :title="value.title || ''"
-                    stream-type="on-demand"
-                />
+                <video-player :key="playerKey">
+                    <video-skin>
+                        <mux-video :src="streamUrl" playsinline crossorigin="anonymous" />
+                    </video-skin>
+                </video-player>
                 <div v-if="processing" class="popcorn-player__notice">
                     <Icon name="loading" />
                     <span v-text="__('Mux is preparing this video. It will play here when it is ready.')" />
@@ -437,9 +437,11 @@ function remove() {
     background: #111827;
 }
 
-.popcorn-player mux-player {
+.popcorn-player video-player,
+.popcorn-player video-skin {
     position: absolute;
     inset: 0;
+    display: block;
     width: 100%;
     height: 100%;
 }

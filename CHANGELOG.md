@@ -14,8 +14,8 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 - **Choose from Assets** (off by default, turned on per field), in Statamic's own asset browser. The server sends the file to Mux, so private containers and sites Mux cannot reach work too.
 - **Browse Mux** in a grid or table, with search across the whole account and a remembered view.
 - The title is kept in step with the Mux dashboard, and the field shows when Mux is still preparing a new video.
-- `{{ popcorn:player }}` and `{{ popcorn:scripts }}` tags for playing a video with Mux Player. The player is a block element, so a rounded box around it rounds all four corners.
+- `{{ popcorn:player }}` and `{{ popcorn:scripts }}` tags for playing a video with Video.js and its Mux media element, which Mux recommends in place of Mux Player. The player is a block element, so a rounded box around it rounds all four corners.
 - A `PopcornVideo` GraphQL type.
 - The `use popcorn` permission.
-- `POPCORN_DISABLE_TRACKING` and `POPCORN_DISABLE_COOKIES` turn off Mux Data and its cookie for every player, with a per-template override for consent. The README explains what Mux Player sends and has privacy policy wording for either setting.
+- Mux Data tracking and its cookie are off by default. `POPCORN_TRACKING` and `POPCORN_TRACKING_COOKIES` turn them on, and a template can turn tracking on for one player once a visitor has consented. The README explains what Mux receives either way and has privacy policy wording for both. Previews in the Control Panel are never tracked.
 - When Mux refuses an upload, for example because a free plan has reached its 10 videos, the field shows Mux's reason with advice, and never blames the access token.

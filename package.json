@@ -7,8 +7,9 @@
         "dev": "vite build --watch"
     },
     "dependencies": {
-        "@mux/mux-player": "^3.11.7",
-        "@mux/mux-uploader": "^1.4.1"
+        "@mux/mux-uploader": "^1.4.1",
+        "@videojs/html": "^10.5.0",
+        "@videojs/mux-video": "^10.5.0"
     },
     "devDependencies": {
         "@statamic/cms": "file:../d3creative/vendor/statamic/cms/resources/dist-package",

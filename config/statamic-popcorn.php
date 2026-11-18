@@ -34,20 +34,24 @@ return [
     | Player
     |--------------------------------------------------------------------------
     |
-    | Where {{ popcorn:scripts }} loads Mux Player from on the front end. Sites
-    | that bundle @mux/mux-player themselves don't need the tag at all.
+    | Videos play in Video.js, the player Mux recommends, with its Mux media
+    | element. "cdn" is the @videojs/cdn release {{ popcorn:scripts }} loads
+    | it from. Keep the exact version: every file in a release imports shared
+    | chunks of that same release. Set it to null if your site bundles
+    | @videojs/html itself.
+    |
+    | "tracking" turns on Mux Data, which reports each view to Mux, and
+    | "cookies" lets it set its muxData cookie to recognise returning
+    | viewers. Both are off unless you turn them on, because in the UK and EU
+    | they usually need a visitor's consent. A template can override either
+    | for one player, for example once a visitor has agreed.
     |
     */
 
     'player' => [
-        'script' => 'https://cdn.jsdelivr.net/npm/@mux/mux-player@3',
-
-        // Mux Player reports every view to Mux Data and sets a "muxData"
-        // cookie unless told not to. These are the defaults for every
-        // {{ popcorn:player }}; a template can override either one, for
-        // example to turn tracking on only once a visitor has consented.
-        'disable_tracking' => env('POPCORN_DISABLE_TRACKING', false),
-        'disable_cookies' => env('POPCORN_DISABLE_COOKIES', false),
+        'cdn' => 'https://cdn.jsdelivr.net/npm/@videojs/cdn@10.5.0',
+        'tracking' => env('POPCORN_TRACKING', false),
+        'cookies' => env('POPCORN_TRACKING_COOKIES', false),
     ],
 
     // Milliseconds between status checks while Mux receives or processes a

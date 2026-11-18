@@ -1,11 +1,4 @@
 {
-  "_mux-player-eg7ZZe7a.js": {
-    "file": "assets/mux-player-eg7ZZe7a.js",
-    "name": "mux-player",
-    "imports": [
-      "_rolldown-runtime-DK3Fl9T5.js"
-    ]
-  },
   "_mux-uploader-Wc6-4rub.js": {
     "file": "assets/mux-uploader-Wc6-4rub.js",
     "name": "mux-uploader",
@@ -17,17 +10,30 @@
     "file": "assets/rolldown-runtime-DK3Fl9T5.js",
     "name": "rolldown-runtime"
   },
+  "_video-player-BHcu-eqI.js": {
+    "file": "assets/video-player-BHcu-eqI.js",
+    "name": "video-player",
+    "imports": [
+      "_rolldown-runtime-DK3Fl9T5.js"
+    ],
+    "dynamicImports": [
+      "_video-player-BHcu-eqI.js"
+    ]
+  },
   "resources/js/addon.js": {
-    "file": "assets/addon-Cx-8b-gw.js",
+    "file": "assets/addon-lSPHSc4-.js",
     "name": "addon",
     "src": "resources/js/addon.js",
     "isEntry": true,
+    "imports": [
+      "_video-player-BHcu-eqI.js"
+    ],
     "dynamicImports": [
-      "_mux-player-eg7ZZe7a.js",
+      "_video-player-BHcu-eqI.js",
       "_mux-uploader-Wc6-4rub.js"
     ],
     "css": [
-      "assets/addon-Ls61GGZh.css"
+      "assets/addon-1eSY-mTe.css"
     ]
   }
 }
