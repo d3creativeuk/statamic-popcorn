@@ -8,7 +8,10 @@ export default defineConfig({
         laravel({
             publicDirectory: 'public',
             buildDirectory: 'build',
-            input: ['resources/js/addon.js'],
+            // addon.js is the Control Panel. The player entries are for the
+            // front end, through {{ popcorn:scripts }}, and are never loaded in
+            // the CP (the service provider registers addon.js only).
+            input: ['resources/js/addon.js', 'resources/js/player.js', 'resources/js/player-mux-data.js'],
         }),
         ...statamic({
             vue: {
@@ -29,10 +32,11 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks(id) {
-                    if (id.includes('@videojs/')) {
-                        return 'video-player';
-                    }
-
+                    // Video.js is left to split naturally. Naming its chunks
+                    // here would pull the modules they share into whichever
+                    // chunk claimed them first, so Mux Data's could end up
+                    // loading with every player. Left alone, code used only by
+                    // player-mux-data.js stays with that entry.
                     if (id.includes('@mux/mux-uploader')) {
                         return 'mux-uploader';
                     }

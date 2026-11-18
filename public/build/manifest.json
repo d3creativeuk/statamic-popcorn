@@ -1,4 +1,12 @@
 {
+  "_media-error-CF_ymMWN.js": {
+    "file": "assets/media-error-CF_ymMWN.js",
+    "name": "media-error"
+  },
+  "_media-target-DOhxUIFT.js": {
+    "file": "assets/media-target-DOhxUIFT.js",
+    "name": "media-target"
+  },
   "_mux-uploader-Wc6-4rub.js": {
     "file": "assets/mux-uploader-Wc6-4rub.js",
     "name": "mux-uploader",
@@ -6,34 +14,500 @@
       "_rolldown-runtime-DK3Fl9T5.js"
     ]
   },
+  "_mux-video-DLntgmvF.js": {
+    "file": "assets/mux-video-DLntgmvF.js",
+    "name": "mux-video",
+    "imports": [
+      "_rolldown-runtime-DK3Fl9T5.js",
+      "_media-target-DOhxUIFT.js",
+      "_media-error-CF_ymMWN.js",
+      "_webkit-CikxgAon.js"
+    ]
+  },
+  "_player-CY5Ehi79.js": {
+    "file": "assets/player-CY5Ehi79.js",
+    "name": "player",
+    "imports": [
+      "_rolldown-runtime-DK3Fl9T5.js",
+      "_media-target-DOhxUIFT.js",
+      "_volume-yJQeGK5m.js",
+      "_predicate-DKs7lvvm.js",
+      "_webkit-CikxgAon.js"
+    ]
+  },
+  "_predicate-DKs7lvvm.js": {
+    "file": "assets/predicate-DKs7lvvm.js",
+    "name": "predicate",
+    "imports": [
+      "_media-target-DOhxUIFT.js"
+    ]
+  },
+  "_preload-helper-odF-skvc.js": {
+    "file": "assets/preload-helper-odF-skvc.js",
+    "name": "preload-helper"
+  },
   "_rolldown-runtime-DK3Fl9T5.js": {
     "file": "assets/rolldown-runtime-DK3Fl9T5.js",
     "name": "rolldown-runtime"
   },
-  "_video-player-BHcu-eqI.js": {
-    "file": "assets/video-player-BHcu-eqI.js",
-    "name": "video-player",
+  "_skin-Jyn8UqMu.js": {
+    "file": "assets/skin-Jyn8UqMu.js",
+    "name": "skin",
     "imports": [
-      "_rolldown-runtime-DK3Fl9T5.js"
+      "_rolldown-runtime-DK3Fl9T5.js",
+      "_preload-helper-odF-skvc.js",
+      "_media-target-DOhxUIFT.js",
+      "_predicate-DKs7lvvm.js",
+      "_volume-yJQeGK5m.js",
+      "_webkit-CikxgAon.js",
+      "_media-error-CF_ymMWN.js"
     ],
     "dynamicImports": [
-      "_video-player-BHcu-eqI.js"
+      "node_modules/@videojs/core/dist/default/i18n/locales/ar.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/az.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/bs.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/bg.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/bn.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/ca.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/cs.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/cy.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/da.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/de.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/el.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/es.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/et.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/eu.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/fa.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/fi.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/fr.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/gd.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/gl.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/he.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/hi.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/hr.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/hu.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/id.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/it.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/ja.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/ko.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/lt.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/lv.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/mr.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/nb.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/nl.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/nn.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/ne.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/oc.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/pl.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/pt-BR.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/pt-PT.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/ro.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/ru.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/sk.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/sl.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/sr.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/sv.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/te.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/th.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/tr.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/uk.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/vi.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/zh-CN.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/zh-TW.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/pt.js",
+      "node_modules/@videojs/core/dist/default/i18n/locales/zh.js"
+    ]
+  },
+  "_volume-yJQeGK5m.js": {
+    "file": "assets/volume-yJQeGK5m.js",
+    "name": "volume",
+    "imports": [
+      "_preload-helper-odF-skvc.js",
+      "_media-target-DOhxUIFT.js",
+      "_predicate-DKs7lvvm.js",
+      "_webkit-CikxgAon.js"
+    ],
+    "dynamicImports": [
+      "node_modules/@videojs/core/dist/default/dom/store/parse-vtt.js"
+    ]
+  },
+  "_webkit-CikxgAon.js": {
+    "file": "assets/webkit-CikxgAon.js",
+    "name": "webkit",
+    "imports": [
+      "_media-target-DOhxUIFT.js"
+    ]
+  },
+  "node_modules/@videojs/core/dist/default/dom/store/parse-vtt.js": {
+    "file": "assets/parse-vtt-De4RjKbX.js",
+    "name": "parse-vtt",
+    "src": "node_modules/@videojs/core/dist/default/dom/store/parse-vtt.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_volume-yJQeGK5m.js"
+    ]
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/ar.js": {
+    "file": "assets/ar-DGArSUT3.js",
+    "name": "ar",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/ar.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/az.js": {
+    "file": "assets/az-CGZvZq9Y.js",
+    "name": "az",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/az.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/bg.js": {
+    "file": "assets/bg-BuyccQIT.js",
+    "name": "bg",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/bg.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/bn.js": {
+    "file": "assets/bn-D2yacfAS.js",
+    "name": "bn",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/bn.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/bs.js": {
+    "file": "assets/bs-Bv9dPrUC.js",
+    "name": "bs",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/bs.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/ca.js": {
+    "file": "assets/ca-eJtrL8o1.js",
+    "name": "ca",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/ca.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/cs.js": {
+    "file": "assets/cs-BXzRpsd_.js",
+    "name": "cs",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/cs.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/cy.js": {
+    "file": "assets/cy-DUW01E3I.js",
+    "name": "cy",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/cy.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/da.js": {
+    "file": "assets/da-D030lwQl.js",
+    "name": "da",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/da.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/de.js": {
+    "file": "assets/de-gvz09wMO.js",
+    "name": "de",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/de.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/el.js": {
+    "file": "assets/el-CWyPnoVm.js",
+    "name": "el",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/el.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/es.js": {
+    "file": "assets/es-BsU79CiS.js",
+    "name": "es",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/es.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/et.js": {
+    "file": "assets/et-q9W3SLUC.js",
+    "name": "et",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/et.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/eu.js": {
+    "file": "assets/eu-T2D2zIyX.js",
+    "name": "eu",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/eu.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/fa.js": {
+    "file": "assets/fa-BV41rOFq.js",
+    "name": "fa",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/fa.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/fi.js": {
+    "file": "assets/fi-BB6tGgE-.js",
+    "name": "fi",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/fi.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/fr.js": {
+    "file": "assets/fr-0nCTvTtg.js",
+    "name": "fr",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/fr.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/gd.js": {
+    "file": "assets/gd-04lsZrZ2.js",
+    "name": "gd",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/gd.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/gl.js": {
+    "file": "assets/gl-mB52BKVE.js",
+    "name": "gl",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/gl.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/he.js": {
+    "file": "assets/he-BWfmp-XK.js",
+    "name": "he",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/he.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/hi.js": {
+    "file": "assets/hi-BxNHuFif.js",
+    "name": "hi",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/hi.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/hr.js": {
+    "file": "assets/hr-zm5-c7i6.js",
+    "name": "hr",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/hr.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/hu.js": {
+    "file": "assets/hu-CdPj7te_.js",
+    "name": "hu",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/hu.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/id.js": {
+    "file": "assets/id-ChIXjN6o.js",
+    "name": "id",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/id.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/it.js": {
+    "file": "assets/it-DUgW4Y2F.js",
+    "name": "it",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/it.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/ja.js": {
+    "file": "assets/ja-Bpz7uNhi.js",
+    "name": "ja",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/ja.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/ko.js": {
+    "file": "assets/ko-CHkE07TQ.js",
+    "name": "ko",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/ko.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/lt.js": {
+    "file": "assets/lt--VeJMBB3.js",
+    "name": "lt",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/lt.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/lv.js": {
+    "file": "assets/lv-dAOnFrCK.js",
+    "name": "lv",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/lv.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/mr.js": {
+    "file": "assets/mr-BJWLxMyT.js",
+    "name": "mr",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/mr.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/nb.js": {
+    "file": "assets/nb-Bzwhn84A.js",
+    "name": "nb",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/nb.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/ne.js": {
+    "file": "assets/ne-DEncG1xh.js",
+    "name": "ne",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/ne.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/nl.js": {
+    "file": "assets/nl-CESsSqT3.js",
+    "name": "nl",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/nl.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/nn.js": {
+    "file": "assets/nn-CIBQpHMY.js",
+    "name": "nn",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/nn.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/oc.js": {
+    "file": "assets/oc-CCDM5qBr.js",
+    "name": "oc",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/oc.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/pl.js": {
+    "file": "assets/pl-DVtFFeYJ.js",
+    "name": "pl",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/pl.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/pt-BR.js": {
+    "file": "assets/pt-BR-DOYtnLUm.js",
+    "name": "pt-BR",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/pt-BR.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/pt-PT.js": {
+    "file": "assets/pt-PT-BBuACs9-.js",
+    "name": "pt-PT",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/pt-PT.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/pt.js": {
+    "file": "assets/pt-VFKQWrMn.js",
+    "name": "pt",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/pt.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "node_modules/@videojs/core/dist/default/i18n/locales/pt-BR.js"
+    ]
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/ro.js": {
+    "file": "assets/ro-BSlGxBHH.js",
+    "name": "ro",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/ro.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/ru.js": {
+    "file": "assets/ru-BIFqwFBP.js",
+    "name": "ru",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/ru.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/sk.js": {
+    "file": "assets/sk-C3P39Eg2.js",
+    "name": "sk",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/sk.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/sl.js": {
+    "file": "assets/sl-BxAMGTTM.js",
+    "name": "sl",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/sl.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/sr.js": {
+    "file": "assets/sr-DJRmC5Bf.js",
+    "name": "sr",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/sr.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/sv.js": {
+    "file": "assets/sv-DWmFnmZx.js",
+    "name": "sv",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/sv.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/te.js": {
+    "file": "assets/te-COeoNCXG.js",
+    "name": "te",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/te.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/th.js": {
+    "file": "assets/th-atFIybwV.js",
+    "name": "th",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/th.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/tr.js": {
+    "file": "assets/tr-CDFmxn17.js",
+    "name": "tr",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/tr.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/uk.js": {
+    "file": "assets/uk-By5Oht4H.js",
+    "name": "uk",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/uk.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/vi.js": {
+    "file": "assets/vi-iHXOg8lu.js",
+    "name": "vi",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/vi.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/zh-CN.js": {
+    "file": "assets/zh-CN-BkLkxg4s.js",
+    "name": "zh-CN",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/zh-CN.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/zh-TW.js": {
+    "file": "assets/zh-TW-CQCld8lG.js",
+    "name": "zh-TW",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/zh-TW.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/@videojs/core/dist/default/i18n/locales/zh.js": {
+    "file": "assets/zh-RIBAyAnI.js",
+    "name": "zh",
+    "src": "node_modules/@videojs/core/dist/default/i18n/locales/zh.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "node_modules/@videojs/core/dist/default/i18n/locales/zh-CN.js"
     ]
   },
   "resources/js/addon.js": {
-    "file": "assets/addon-lSPHSc4-.js",
+    "file": "assets/addon-BfbI4ie8.js",
     "name": "addon",
     "src": "resources/js/addon.js",
     "isEntry": true,
     "imports": [
-      "_video-player-BHcu-eqI.js"
+      "_preload-helper-odF-skvc.js"
     ],
     "dynamicImports": [
-      "_video-player-BHcu-eqI.js",
+      "_player-CY5Ehi79.js",
+      "_skin-Jyn8UqMu.js",
+      "_mux-video-DLntgmvF.js",
       "_mux-uploader-Wc6-4rub.js"
     ],
     "css": [
       "assets/addon-1eSY-mTe.css"
+    ]
+  },
+  "resources/js/player-mux-data.js": {
+    "file": "assets/player-mux-data-pUiB7rwa.js",
+    "name": "player-mux-data",
+    "src": "resources/js/player-mux-data.js",
+    "isEntry": true,
+    "imports": [
+      "_media-target-DOhxUIFT.js",
+      "_predicate-DKs7lvvm.js"
+    ]
+  },
+  "resources/js/player.js": {
+    "file": "assets/player-C6NRfwFk.js",
+    "name": "player",
+    "src": "resources/js/player.js",
+    "isEntry": true,
+    "imports": [
+      "_player-CY5Ehi79.js",
+      "_skin-Jyn8UqMu.js",
+      "_mux-video-DLntgmvF.js"
     ]
   }
 }

@@ -2,14 +2,17 @@
 
 namespace D3Creative\Popcorn\Tags;
 
+use Illuminate\Foundation\Vite;
 use Statamic\Fields\Value;
 use Statamic\Tags\Tags;
+use Throwable;
 
 /**
  * Plays a Popcorn video on the front end with Video.js and its Mux media
  * element, the player Mux recommends.
  *
- *   {{ popcorn:scripts }}   once, in the layout's <head>
+ *   {{ popcorn:scripts }}   once, in the layout's <head>; serves the player
+ *                           from the site, published with the add-on
  *   {{ popcorn:player :video="hero_video" accent-color="#0061ff" }}
  *
  * The player is three elements: <video-player> holds the state, <video-skin>
@@ -23,12 +26,20 @@ use Statamic\Tags\Tags;
 class Popcorn extends Tags
 {
     /**
-     * The files {{ popcorn:scripts }} loads from the CDN release. Mux Data's
-     * is only loaded when it can be used.
+     * The player and Mux Data, as built into this add-on's public/build and
+     * published to the site's public/vendor/statamic-popcorn/build.
      */
-    protected const SCRIPTS = ['video.js', 'media/mux-video.js'];
+    protected const ENTRY = 'resources/js/player.js';
 
-    protected const TRACKING_SCRIPT = 'extensions/mux-data.js';
+    protected const TRACKING_ENTRY = 'resources/js/player-mux-data.js';
+
+    /**
+     * The same files in an @videojs/cdn release, for sites that set
+     * player.cdn.
+     */
+    protected const CDN_SCRIPTS = ['video.js', 'media/mux-video.js'];
+
+    protected const CDN_TRACKING_SCRIPT = 'extensions/mux-data.js';
 
     public function player(): string
     {
@@ -76,15 +87,40 @@ class Popcorn extends Tags
     {
         $cdn = rtrim((string) config('statamic-popcorn.player.cdn'), '/');
 
-        if ($cdn === '') {
+        return $cdn === '' ? $this->bundledScripts() : $this->cdnScripts($cdn);
+    }
+
+    /**
+     * Served from the site itself, so visitors' browsers contact no one but
+     * Mux. A clone of Laravel's Vite, so pointing it at this add-on's build
+     * and hot file leaves the site's own @vite alone.
+     */
+    protected function bundledScripts(): string
+    {
+        $vite = clone app(Vite::class);
+        $vite->useHotFile(dirname(__DIR__, 2).'/public/hot');
+
+        try {
+            return (string) $vite(
+                [self::ENTRY, ...($this->tracking() ? [self::TRACKING_ENTRY] : [])],
+                'vendor/statamic-popcorn/build',
+            );
+        } catch (Throwable $e) {
+            // Most likely the assets were never published. Report it, but
+            // don't take the whole page down for a missing video player.
+            report($e);
+
             return '';
         }
+    }
 
-        $files = [...self::SCRIPTS, ...($this->tracking() ? [self::TRACKING_SCRIPT] : [])];
+    protected function cdnScripts(string $cdn): string
+    {
+        $files = [...self::CDN_SCRIPTS, ...($this->tracking() ? [self::CDN_TRACKING_SCRIPT] : [])];
 
         return collect($files)
             ->map(fn ($file) => '<script type="module" src="'.e("{$cdn}/{$file}").'"></script>')
-            ->implode("");
+            ->implode('');
     }
 
     /**

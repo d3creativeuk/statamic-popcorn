@@ -35,10 +35,15 @@ return [
     |--------------------------------------------------------------------------
     |
     | Videos play in Video.js, the player Mux recommends, with its Mux media
-    | element. "cdn" is the @videojs/cdn release {{ popcorn:scripts }} loads
-    | it from. Keep the exact version: every file in a release imports shared
-    | chunks of that same release. Set it to null if your site bundles
-    | @videojs/html itself.
+    | element. {{ popcorn:scripts }} serves it from your own site: it is built
+    | into the add-on and published with it to public/vendor/statamic-popcorn.
+    | That way visitors' browsers contact no one but Mux.
+    |
+    | "cdn" loads it from an @videojs/cdn release instead, for example
+    | https://cdn.jsdelivr.net/npm/@videojs/cdn@10.5.0. Keep the exact
+    | version: every file in a release imports shared chunks of that same
+    | release. A CDN is a third party that sees every visitor's IP address,
+    | so leave this null unless you have a reason to use one.
     |
     | "tracking" turns on Mux Data, which reports each view to Mux, and
     | "cookies" lets it set its muxData cookie to recognise returning
@@ -49,7 +54,7 @@ return [
     */
 
     'player' => [
-        'cdn' => 'https://cdn.jsdelivr.net/npm/@videojs/cdn@10.5.0',
+        'cdn' => env('POPCORN_PLAYER_CDN'),
         'tracking' => env('POPCORN_TRACKING', false),
         'cookies' => env('POPCORN_TRACKING_COOKIES', false),
     ],

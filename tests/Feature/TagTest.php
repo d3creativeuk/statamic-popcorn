@@ -3,6 +3,9 @@
 namespace D3Creative\Popcorn\Tests\Feature;
 
 use D3Creative\Popcorn\Tests\TestCase;
+use Illuminate\Foundation\Vite;
+use Illuminate\Support\Facades\File;
+use ReflectionProperty;
 use PHPUnit\Framework\Attributes\Test;
 use Statamic\Facades\Antlers;
 
@@ -125,9 +128,67 @@ class TagTest extends TestCase
         $this->assertSame('', trim($this->render('{{ popcorn:player :video="video" }}', ['video' => null])));
     }
 
-    #[Test]
-    public function the_scripts_tag_loads_video_js_and_mux_data_only_when_tracking_is_on()
+    /**
+     * The manifest the add-on publishes to public/vendor/statamic-popcorn,
+     * with the shape Vite writes.
+     */
+    protected function publishManifest(): void
     {
+        // AddonTestCase swaps Vite for a fake that renders nothing, and the
+        // real one keeps every manifest it has read for the whole process.
+        $this->withVite();
+        $this->forgetManifests();
+
+        File::ensureDirectoryExists($dir = public_path('vendor/statamic-popcorn/build'));
+
+        File::put("{$dir}/manifest.json", json_encode([
+            'resources/js/player.js' => ['file' => 'assets/player-abc.js', 'src' => 'resources/js/player.js', 'isEntry' => true, 'imports' => ['_skin-def.js']],
+            '_skin-def.js' => ['file' => 'assets/skin-def.js'],
+            'resources/js/player-mux-data.js' => ['file' => 'assets/player-mux-data-ghi.js', 'src' => 'resources/js/player-mux-data.js', 'isEntry' => true],
+        ]));
+    }
+
+    protected function forgetManifests(): void
+    {
+        (new ReflectionProperty(Vite::class, 'manifests'))->setValue(null, []);
+    }
+
+    protected function tearDown(): void
+    {
+        File::deleteDirectory(public_path('vendor/statamic-popcorn'));
+
+        parent::tearDown();
+    }
+
+    #[Test]
+    public function the_scripts_tag_serves_the_player_from_the_site_and_mux_data_only_when_tracking_is_on()
+    {
+        $this->publishManifest();
+
+        $html = $this->render('{{ popcorn:scripts }}');
+
+        $this->assertStringContainsString('<script type="module" src="http://localhost/vendor/statamic-popcorn/build/assets/player-abc.js"></script>', $html);
+        $this->assertStringContainsString('<link rel="modulepreload" as="script" href="http://localhost/vendor/statamic-popcorn/build/assets/skin-def.js" />', $html);
+        $this->assertStringNotContainsString('mux-data', $html);
+        $this->assertStringNotContainsString('cdn.', $html);
+
+        $this->assertStringContainsString('/vendor/statamic-popcorn/build/assets/player-mux-data-ghi.js', $this->render('{{ popcorn:scripts tracking="true" }}'));
+    }
+
+    #[Test]
+    public function unpublished_assets_are_reported_rather_than_breaking_the_page()
+    {
+        $this->withVite();
+        $this->forgetManifests();
+
+        $this->assertSame('', trim($this->render('{{ popcorn:scripts }}')));
+    }
+
+    #[Test]
+    public function a_site_can_load_the_player_from_a_cdn_instead()
+    {
+        config()->set('statamic-popcorn.player.cdn', 'https://cdn.jsdelivr.net/npm/@videojs/cdn@10.5.0/');
+
         $this->assertSame(
             '<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.5.0/video.js"></script>'
             .'<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.5.0/media/mux-video.js"></script>',
@@ -138,9 +199,5 @@ class TagTest extends TestCase
             '<script type="module" src="https://cdn.jsdelivr.net/npm/@videojs/cdn@10.5.0/extensions/mux-data.js"></script>',
             $this->render('{{ popcorn:scripts tracking="true" }}'),
         );
-
-        config()->set('statamic-popcorn.player.cdn', null);
-
-        $this->assertSame('', trim($this->render('{{ popcorn:scripts }}')));
     }
 }

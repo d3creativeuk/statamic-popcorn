@@ -9,6 +9,7 @@
     "dependencies": {
         "@mux/mux-uploader": "^1.4.1",
         "@videojs/html": "^10.5.0",
+        "@videojs/mux-data": "^10.5.0",
         "@videojs/mux-video": "^10.5.0"
     },
     "devDependencies": {

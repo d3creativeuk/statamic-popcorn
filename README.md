@@ -110,9 +110,9 @@ A parameter set to `true` becomes a bare attribute (`muted="true"` gives `muted`
 
 The skin is given `display: block`, ahead of any `style` you pass, as in Mux's own example. That makes it fill its box without a small gap below it, so in a box with rounded corners the bottom corners are drawn on the video. Set `display` in your own `style` to change it.
 
-`{{ popcorn:scripts }}` loads Video.js from jsDelivr, pinned to one release of [`@videojs/cdn`](https://www.npmjs.com/package/@videojs/cdn). It is the quickest way to start, but for a live site **bundle or self-host Video.js instead**. jsDelivr is a third party with no agreement with you, and every visitor's browser sends it their IP address (see [Privacy](#privacy)). Serving the player from your own domain means only Mux, as your processor, hears from visitors.
+`{{ popcorn:scripts }}` serves the player from your own site. Video.js is built into the add-on and published with it to `public/vendor/statamic-popcorn`, so visitors' browsers fetch it from your domain and contact no one but Mux. Put the tag in the `<head>` of any layout that plays video. It loads Mux Data's code only when tracking is on.
 
-To bundle it, which keeps it out of pages with no video, install the packages and load them from your site's JavaScript:
+If you would rather include the player in your site's own JavaScript, so that pages without a video don't load it at all, leave `{{ popcorn:scripts }}` out and bundle it yourself:
 
 ```bash
 npm install @videojs/html@10.5.0 @videojs/mux-video@10.5.0
@@ -139,9 +139,7 @@ if (document.querySelector('mux-data')) {
 }
 ```
 
-Then leave `{{ popcorn:scripts }}` out of your layout, or publish the config and set `player.cdn` to `null`.
-
-To self-host the CDN build instead, copy every file in the `@videojs/cdn` package to your own server, since each file imports shared chunks from the same release, and point `player.cdn` at that folder. Keep an exact version either way.
+To load Video.js from a public CDN instead, set `POPCORN_PLAYER_CDN` to an [`@videojs/cdn`](https://www.npmjs.com/package/@videojs/cdn) release, such as `https://cdn.jsdelivr.net/npm/@videojs/cdn@10.5.0`, with an exact version, because the files in a release import each other's shared chunks. There is little reason to: browsers no longer share cached files between sites, so a CDN copy saves your visitors nothing, and the CDN is a third party that sees every visitor's IP address with no agreement with you.
 
 Mux Player and Video.js both define a `<mux-video>` element, and a page can only have one, so don't load Mux Player on the same pages.
 
@@ -165,7 +163,7 @@ The field is a `PopcornVideo` type with the same keys.
 
 **Popcorn turns tracking and cookies off by default.** Out of the box, `{{ popcorn:player }}` plays videos without Mux Data, Mux's analytics service: nothing is reported about what visitors watch, no cookie is set, and Mux Data's code isn't even loaded. Previews in the Control Panel are never tracked either.
 
-Even then, the video and its poster are delivered from Mux's servers (`stream.mux.com`, `image.mux.com` and Mux's delivery network), which see the viewer's IP address and browser as any server does. Mux does this as your processor under its [data processing addendum](https://www.mux.com/dpa). If you load the player with `{{ popcorn:scripts }}`, jsDelivr sees the same, without any such agreement, which is why a live site should [bundle or self-host Video.js](#with-the-player-tag).
+Even then, the video and its poster are delivered from Mux's servers (`stream.mux.com`, `image.mux.com` and Mux's delivery network), which see the viewer's IP address and browser as any server does. Mux does this as your processor under its [data processing addendum](https://www.mux.com/dpa). The player itself comes from your own site, so no other third party is involved, unless you set `POPCORN_PLAYER_CDN`.
 
 ### Contacting Mux only when someone presses play
 
@@ -236,7 +234,17 @@ Copy the paragraph that matches your settings, then adjust it to your site. It i
 
 > Videos on this website are hosted by Mux, Inc., a video platform based in the United States. When you watch a video, your browser loads it from Mux's servers, which receive your IP address and information about your browser and device. Mux also collects viewing statistics for us through its Mux Data service: which video you watched, how much of it you played, the playback quality and any errors, and your device type, operating system and browser. Mux uses your IP address to estimate your country and region and to filter out automated traffic, then shortens it before storing it; it does not collect your name or email address. To recognise repeat views, Mux sets a cookie on this website called `muxData`, which holds a random viewer ID and session details and lasts for up to a year. Mux keeps viewing statistics for up to 100 days. Mux processes this data on our behalf and may transfer it to the United States, under the EU–US Data Privacy Framework and its UK Extension, or standard contractual clauses where those do not apply. You can read more in Mux's privacy policy at https://www.mux.com/privacy.
 
-If you turn tracking on but leave cookies off, use the second paragraph without the sentence about the `muxData` cookie. If you load the player with `{{ popcorn:scripts }}`, add to either: "The video player itself is loaded from jsDelivr, a public content delivery network, which receives your IP address and browser information."
+If you turn tracking on but leave cookies off, use the second paragraph without the sentence about the `muxData` cookie. If you set `POPCORN_PLAYER_CDN`, add to either: "The video player itself is loaded from jsDelivr, a public content delivery network, which receives your IP address and browser information." (naming your CDN).
+
+### In the United States
+
+The US has no cookie-consent law like the UK's and EU's. The risk is litigation: suits under California's Invasion of Privacy Act (CIPA), the federal Video Privacy Protection Act (VPPA) and the California Consumer Privacy Act (CCPA) have targeted sites whose third-party scripts collect data from visitors. This is how Popcorn stands against each with its defaults, and what would change that. It is not legal advice; have your counsel review it.
+
+- **CIPA "wiretap" and "pen register" claims** argue that a third party received visitors' data, such as their IP address, without consent. With tracking off and the player served from your site, the only outside party a visitor's browser contacts is Mux, and only to deliver the video. Mux's data processing addendum (section 11) makes Mux your CCPA "service provider": it may not sell or share the data, use it for anything else, or combine it with other data. Turning tracking on adds analytics, which is what these suits are about, and setting `POPCORN_PLAYER_CDN` adds a third party with no such agreement. For the strongest position, use [click-to-play](#contacting-mux-only-when-someone-presses-play), so that nothing is sent to anyone until a visitor chooses to watch.
+- **VPPA claims** are about passing "this person watched this video" to someone who can identify them, usually an advertising pixel such as Meta's. Popcorn never sends anything that identifies a viewer. Even with tracking on, Mux Data receives the video's title and ID with a random viewer ID, or none unless cookies are on. Never add `metadata-viewer-user-id` with a name, email or account ID. The larger VPPA risk on any site is an advertising pixel on pages that play video, which Popcorn has nothing to do with.
+- **CCPA and CPRA.** Passing data to a service provider is not a "sale" or "share", so Popcorn needs no "Do Not Sell or Share" or Global Privacy Control handling. Your privacy policy should still say that video is hosted by Mux; the paragraph for tracking off covers it.
+
+For a site that is sensitive to this, keep the defaults (tracking and cookies off, no CDN), consider click-to-play, confirm that Mux's data processing addendum applies to your Mux account, and add the paragraph for tracking off to your privacy policy.
 
 ## Configuration
 
@@ -251,7 +259,7 @@ php artisan vendor:publish --tag=statamic-popcorn-config
 | `mux.token_id`, `mux.token_secret` | `MUX_TOKEN_ID`, `MUX_TOKEN_SECRET` | Your Mux access token |
 | `mux.video_quality` | `POPCORN_MUX_VIDEO_QUALITY`, or your Mux account's default | `basic`, `plus` or `premium` for videos Popcorn creates. It changes what Mux charges, so check Mux's pricing first |
 | `mux.per_page` | `50` | How many videos Browse Mux asks for at a time (Mux allows up to 100) |
-| `player.cdn` | jsDelivr's `@videojs/cdn@10.5.0` | Where `{{ popcorn:scripts }}` loads Video.js from, or `null` if you bundle it yourself |
+| `player.cdn` | `POPCORN_PLAYER_CDN`, or `null` | An `@videojs/cdn` release to load Video.js from instead of your own site. Best left `null`. See [With the player tag](#with-the-player-tag) |
 | `player.tracking` | `POPCORN_TRACKING`, or `false` | Report views to Mux Data from every `{{ popcorn:player }}`. See [Privacy](#privacy) |
 | `player.cookies` | `POPCORN_TRACKING_COOKIES`, or `false` | Let Mux Data set its `muxData` cookie when tracking is on. See [Privacy](#privacy) |
 | `poll_interval` | `3000` | Milliseconds between status checks while Mux receives or prepares a video |

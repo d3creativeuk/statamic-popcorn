@@ -39,6 +39,7 @@ Things that will bite when writing tests:
 
 - **Set addon config after boot** (`config()->set()` in `setUp`), not in `getEnvironmentSetUp`. Statamic merges the addon config one level deep.
 - **`SendAssetToMux` runs inside the request.** `dispatchAfterResponse()` fires when the test kernel terminates, so by the time `postJson()` returns the PUT to Mux has already happened.
+- **`AddonTestCase` calls `withoutVite()`**, so anything rendered through Laravel's `Vite` is an empty string. `TagTest` calls `withVite()` and clears Vite's static manifest cache before testing `popcorn:scripts`.
 - **`Antlers::parse()` treats its input as untrusted user content** unless the third argument is `true`, and untrusted content may only use core's default tags. `TagTest` passes `true`; without it every Popcorn tag renders as an empty string.
 
 The Vue side has no tests. Verify it in the host CP.
@@ -54,7 +55,8 @@ The Vue side has no tests. Verify it in the host CP.
 
 ## Decisions worth knowing before changing things
 
-- **Video.js, not Mux Player.** Mux put Mux Player for Web in maintenance mode and recommends Video.js 10 with its Mux packages. Both define `<mux-video>`, so they cannot share a page. The CDN version in `player.cdn` must be exact: a release's files import its own shared chunks.
+- **Video.js, not Mux Player.** Mux put Mux Player for Web in maintenance mode and recommends Video.js 10 with its Mux packages. Both define `<mux-video>`, so they cannot share a page.
+- **The front-end player ships with the add-on.** `resources/js/player.js` and `player-mux-data.js` are Vite entries beside `addon.js`; `popcorn:scripts` serves them from the published build with a clone of Laravel's `Vite` (so the site's own `@vite` and hot file are untouched). The service provider registers only `addon.js`, so the CP never loads them. Don't name Video.js chunks in `manualChunks`: rolldown pulls a matched module's dependencies into its chunk, which once put shared Video.js code in the Mux Data chunk and made every player load Mux Data. `player.cdn` (null by default) is the opt-in CDN; its version must be exact.
 - **Tracking and cookies are off by default.** In Video.js, Mux Data only runs when a `<mux-data>` element is present, so the tag leaves it out unless `player.tracking` (or a `tracking` parameter) is on, and adds `disable-cookies` unless `player.cookies` is on. `popcorn:scripts` only loads `extensions/mux-data.js` when tracking is on.
 
 - **One fieldtype for every host.** The handle is `popcorn`, not `mux_*`. A stored value without a `provider` key is Mux. Adding a host means adding a `provider` config option (default `mux`) and a sibling of `src/Mux`, not a new fieldtype, so existing content keeps working.
