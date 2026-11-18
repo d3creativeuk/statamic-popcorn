@@ -110,7 +110,38 @@ A parameter set to `true` becomes a bare attribute (`muted="true"` gives `muted`
 
 The skin is given `display: block`, ahead of any `style` you pass, as in Mux's own example. That makes it fill its box without a small gap below it, so in a box with rounded corners the bottom corners are drawn on the video. Set `display` in your own `style` to change it.
 
-`{{ popcorn:scripts }}` loads Video.js from jsDelivr, pinned to one release of [`@videojs/cdn`](https://www.npmjs.com/package/@videojs/cdn). To load it from somewhere else, publish the config and change `player.cdn`; keep an exact version, because the files in a release import each other's shared chunks. If your site bundles `@videojs/html` itself, set `player.cdn` to `null` and import `@videojs/html/video/player`, `@videojs/html/video/skin` and `@videojs/html/media/mux-video` (plus `@videojs/html/extensions/mux-data` with the `@videojs/mux-data` package, if you turn tracking on).
+`{{ popcorn:scripts }}` loads Video.js from jsDelivr, pinned to one release of [`@videojs/cdn`](https://www.npmjs.com/package/@videojs/cdn). It is the quickest way to start, but for a live site **bundle or self-host Video.js instead**. jsDelivr is a third party with no agreement with you, and every visitor's browser sends it their IP address (see [Privacy](#privacy)). Serving the player from your own domain means only Mux, as your processor, hears from visitors.
+
+To bundle it, which keeps it out of pages with no video, install the packages and load them from your site's JavaScript:
+
+```bash
+npm install @videojs/html@10.5.0 @videojs/mux-video@10.5.0
+```
+
+```js
+// site.js
+// [data-video] covers a click-to-play wrapper (see Privacy), which has no
+// player on the page until it is pressed.
+if (document.querySelector('video-player, mux-video, [data-video]')) {
+    import('./video-player.js');
+}
+```
+
+```js
+// video-player.js
+import '@videojs/html/video/player';
+import '@videojs/html/video/skin';
+import '@videojs/html/media/mux-video';
+
+// Only if you turn tracking on (npm install @videojs/mux-data@10.5.0 too).
+if (document.querySelector('mux-data')) {
+    import('@videojs/html/extensions/mux-data');
+}
+```
+
+Then leave `{{ popcorn:scripts }}` out of your layout, or publish the config and set `player.cdn` to `null`.
+
+To self-host the CDN build instead, copy every file in the `@videojs/cdn` package to your own server, since each file imports shared chunks from the same release, and point `player.cdn` at that folder. Keep an exact version either way.
 
 Mux Player and Video.js both define a `<mux-video>` element, and a page can only have one, so don't load Mux Player on the same pages.
 
@@ -134,7 +165,36 @@ The field is a `PopcornVideo` type with the same keys.
 
 **Popcorn turns tracking and cookies off by default.** Out of the box, `{{ popcorn:player }}` plays videos without Mux Data, Mux's analytics service: nothing is reported about what visitors watch, no cookie is set, and Mux Data's code isn't even loaded. Previews in the Control Panel are never tracked either.
 
-Even then, the video and its poster are delivered from Mux's servers (`stream.mux.com`, `image.mux.com` and Mux's delivery network), which see the viewer's IP address and browser as any server does, and `{{ popcorn:scripts }}` loads the player from jsDelivr, which sees the same.
+Even then, the video and its poster are delivered from Mux's servers (`stream.mux.com`, `image.mux.com` and Mux's delivery network), which see the viewer's IP address and browser as any server does. Mux does this as your processor under its [data processing addendum](https://www.mux.com/dpa). If you load the player with `{{ popcorn:scripts }}`, jsDelivr sees the same, without any such agreement, which is why a live site should [bundle or self-host Video.js](#with-the-player-tag).
+
+### Contacting Mux only when someone presses play
+
+Out of the box the player contacts Mux as soon as the page loads, so that playback can start straight away. Two settings cut that down, but neither stops it:
+
+- `preload="none"` stops the video itself downloading before play. Video.js still fetches the video's details, its playlist and the timeline thumbnails from Mux when the page loads.
+- Your own poster, from your asset library rather than Mux, stops the poster request to `image.mux.com`. Put it in the skin's `poster` slot when you write the elements yourself: `<img slot="poster" src="…" alt="">` inside `<video-skin>`.
+
+```antlers
+{{ popcorn:player :video="hero_video" preload="none" }}
+```
+
+To send Mux nothing at all until a visitor presses play, don't put the player on the page until then. Show your own poster image and a play button, and swap in the player when it is pressed:
+
+```antlers
+{{ if hero_video }}
+<div data-video x-data="{ playing: false }" style="aspect-ratio: 16 / 9;">
+    <button x-show="! playing" @click="playing = true"
+            type="button" aria-label="Play {{ hero_video:title }}" style="display: block; width: 100%; height: 100%;">
+        <img src="{{ glide:poster_image width="1280" }}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+    </button>
+    <template x-if="playing">
+        {{ popcorn:player :video="hero_video" autoplay="true" style="width: 100%; height: 100%;" }}
+    </template>
+</div>
+{{ /if }}
+```
+
+This example uses Alpine.js, but any script that adds the player's markup after a click does the same. Video.js still has to be loaded on the page: `{{ popcorn:scripts }}` does that, and the [bundled loader above](#with-the-player-tag) looks for `data-video` so that it loads Video.js for a player that isn't on the page yet. The video starts with sound, because the visitor has just pressed play.
 
 ### Turning tracking on
 
