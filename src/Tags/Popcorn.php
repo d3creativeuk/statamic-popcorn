@@ -46,7 +46,27 @@ class Popcorn extends Tags
             $attributes[$name] = $value;
         }
 
+        $attributes['style'] = $this->style($attributes['style'] ?? null);
+
         return '<mux-player'.$this->attributes($attributes).'></mux-player>';
+    }
+
+    /**
+     * Mux Player is inline-block, so it sits on a line of text and leaves a
+     * gap below it the height of the text's descender. Inside a box with
+     * rounded corners and overflow hidden, that gap is where the bottom
+     * corners are drawn, so they never show on the video. Block removes the
+     * gap. A template that sets its own display keeps it.
+     */
+    protected function style($style): string
+    {
+        $style = trim((string) ($style === true ? '' : $style));
+
+        if (preg_match('/(^|;)\s*display\s*:/i', $style)) {
+            return $style;
+        }
+
+        return trim('display: block; '.$style);
     }
 
     public function scripts(): string

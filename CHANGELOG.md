@@ -14,6 +14,6 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 - **Choose from Assets**, in Statamic's own asset browser. The server sends the file to Mux, so private containers and sites Mux cannot reach work too.
 - **Browse Mux** in a grid or table, with search across the whole account and a remembered view.
 - The title is kept in step with the Mux dashboard, and the field shows when Mux is still preparing a new video.
-- `{{ popcorn:player }}` and `{{ popcorn:scripts }}` tags for playing a video with Mux Player.
+- `{{ popcorn:player }}` and `{{ popcorn:scripts }}` tags for playing a video with Mux Player. The player is a block element, so a rounded box around it rounds all four corners.
 - A `PopcornVideo` GraphQL type.
 - The `use popcorn` permission.

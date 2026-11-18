@@ -31,7 +31,7 @@ class TagTest extends TestCase
     public function the_player_carries_the_playback_id_and_reports_the_title_to_mux_data()
     {
         $this->assertSame(
-            '<mux-player playback-id="Play1" stream-type="on-demand" metadata-video-title="Tour &amp; &quot;more&quot;" metadata-video-id="Asset1"></mux-player>',
+            '<mux-player playback-id="Play1" stream-type="on-demand" metadata-video-title="Tour &amp; &quot;more&quot;" metadata-video-id="Asset1" style="display: block;"></mux-player>',
             $this->render('{{ popcorn:player :video="video" }}', ['video' => $this->video()]),
         );
     }
@@ -52,6 +52,22 @@ class TagTest extends TestCase
         $this->assertStringContainsString(' accent-color="#0061ff"', $html);
         $this->assertStringContainsString(' muted', $html);
         $this->assertStringNotContainsString('loop', $html);
+    }
+
+    #[Test]
+    public function the_player_is_a_block_so_a_rounded_box_rounds_its_bottom_corners_too()
+    {
+        $html = $this->render('{{ popcorn:player :video="video" style="aspect-ratio: 16/9; width: 100%;" }}', ['video' => $this->video()]);
+
+        $this->assertStringContainsString(' style="display: block; aspect-ratio: 16/9; width: 100%;"', $html);
+    }
+
+    #[Test]
+    public function a_template_that_sets_its_own_display_keeps_it()
+    {
+        $html = $this->render('{{ popcorn:player :video="video" style="width: 50%; display: inline-block" }}', ['video' => $this->video()]);
+
+        $this->assertStringContainsString(' style="width: 50%; display: inline-block"', $html);
     }
 
     #[Test]

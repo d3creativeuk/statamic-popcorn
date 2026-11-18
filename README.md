@@ -96,6 +96,8 @@ Every parameter other than `video` becomes an attribute on `<mux-player>`, so an
 
 The title is always sent to Mux Data as `metadata-video-title`, so views are reported against it. It is only drawn on the player when **Show Title** is on.
 
+The player is given `display: block`, ahead of any `style` you pass. Mux Player is otherwise inline-block, which leaves a small gap below it, so in a box with rounded corners the bottom corners would be drawn in the gap rather than on the video. Set `display` in your own `style` to change it.
+
 `{{ popcorn:scripts }}` loads Mux Player from jsDelivr. To load it from somewhere else, publish the config and change `player.script`. If your site already bundles `@mux/mux-player`, you do not need the tag at all.
 
 ### Writing the element yourself
