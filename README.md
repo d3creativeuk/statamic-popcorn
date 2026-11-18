@@ -8,6 +8,8 @@ Mux is the only video host for now. The field is built so that others can be add
 
 ![Popcorn by D3 Creative](art/popcorn-art.jpg)
 
+![The Browse Mux panel in the Statamic Control Panel: a search box, grid and table views, and a table of the Mux account's videos with a thumbnail, title, duration, resolution and date for each, one selected, and Cancel and Select buttons](art/popcorn-screenshot.jpeg)
+
 ## Requirements
 
 - Statamic 6
