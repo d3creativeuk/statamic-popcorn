@@ -40,6 +40,9 @@ const picking = ref(false);
 // Bumped to remount the player once a processing video is ready.
 const playerKey = ref(0);
 const uploaderReady = ref(false);
+// The drop zone and file button find their uploader by id, and an entry can
+// hold several Popcorn fields, so each field has its own.
+const uploaderId = `popcorn-uploader-${Math.random().toString(36).slice(2, 10)}`;
 
 let uploadId = null;
 let lastSyncedTitle = props.value?.title ?? null;
@@ -318,15 +321,48 @@ function remove() {
                 <Field v-show="!transfer" :label="__('Title')" :instructions="__('Name the video before uploading. Also shown in the Mux dashboard.')" required>
                     <Input v-model="pendingTitle" />
                 </Field>
-                <mux-uploader
-                    v-if="uploaderReady"
-                    v-show="pendingTitle.trim() && !transfer"
-                    :endpoint.prop="uploadUrl"
-                    @uploadstart="uploadStarted"
-                    @progress="uploadProgress"
-                    @success="uploadFinished"
-                    @uploaderror="uploadFailed"
-                />
+                <template v-if="uploaderReady">
+                    <!-- Mux Uploader does the uploading but draws none of
+                         its own interface: its large heading and black
+                         button look out of place in the Control Panel. Its
+                         drop zone and file button are placed here instead,
+                         laid out and worded like core's Assets field, whose
+                         strings Statamic already translates. -->
+                    <mux-uploader
+                        :id="uploaderId"
+                        style="display: none"
+                        no-drop
+                        no-progress
+                        no-status
+                        no-retry
+                        :endpoint.prop="uploadUrl"
+                        @uploadstart="uploadStarted"
+                        @progress="uploadProgress"
+                        @success="uploadFinished"
+                        @uploaderror="uploadFailed"
+                    />
+                    <mux-uploader-drop
+                        v-show="pendingTitle.trim() && !transfer"
+                        :mux-uploader="uploaderId"
+                        class="popcorn-drop border border-gray-300 dark:border-gray-700 dark:bg-gray-850 text-xs text-gray-600 dark:text-gray-400"
+                    >
+                        <span slot="heading" />
+                        <span slot="separator" />
+                        <span class="popcorn-drop__idle">
+                            <Icon name="upload-cloud" class="size-5 shrink-0 text-gray-500" />
+                            <span class="min-w-0">
+                                {{ __('Drag & drop here or') }}&nbsp;<mux-uploader-file-select :mux-uploader="uploaderId"><button
+                                    type="button"
+                                    class="underline underline-offset-2 cursor-pointer hover:text-gray-925 dark:hover:text-gray-200"
+                                >{{ __('choose a file') }}</button></mux-uploader-file-select>.
+                            </span>
+                        </span>
+                        <span class="popcorn-drop__active">
+                            <Icon name="upload-cloud" class="size-5 shrink-0" />
+                            <span class="text-sm" v-text="__('Drop to Upload')" />
+                        </span>
+                    </mux-uploader-drop>
+                </template>
             </template>
 
             <div v-if="transfer" class="space-y-2">
@@ -398,6 +434,41 @@ function remove() {
     background: rgb(0 0 0 / 0.75);
     color: #fff;
     font-size: 0.875rem;
+}
+
+/* Mux's drop zone is a centred column with a thick dashed border. These
+   outrank its own :host styles and make it the slim bordered row of core's
+   Assets field. While a file is dragged over it, Mux sets [active]. */
+.popcorn-drop {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    border-style: solid;
+    border-radius: 0.75rem;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.popcorn-drop[active] {
+    border-style: dashed;
+    border-color: var(--theme-color-primary, #4f46e5);
+    background: color-mix(in srgb, var(--theme-color-primary, #4f46e5) 8%, transparent);
+    color: var(--theme-color-primary, #4f46e5);
+}
+
+.popcorn-drop__idle,
+.popcorn-drop__active {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.popcorn-drop[active] .popcorn-drop__idle,
+.popcorn-drop:not([active]) .popcorn-drop__active {
+    display: none;
 }
 
 .popcorn-progress {
