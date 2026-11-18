@@ -42,6 +42,14 @@ class Popcorn extends Tags
             'title' => ($video['show_title'] ?? false) ? $title : null,
         ], fn ($value) => filled($value));
 
+        // The site's privacy defaults. They go in before the template's own
+        // parameters, so disable-tracking="false" in a template wins.
+        foreach (['disable-tracking' => 'disable_tracking', 'disable-cookies' => 'disable_cookies'] as $attribute => $key) {
+            if (filter_var(config("statamic-popcorn.player.{$key}"), FILTER_VALIDATE_BOOLEAN)) {
+                $attributes[$attribute] = true;
+            }
+        }
+
         foreach ($this->params->except('video')->all() as $name => $value) {
             $attributes[$name] = $value;
         }

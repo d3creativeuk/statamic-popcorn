@@ -71,6 +71,40 @@ class TagTest extends TestCase
     }
 
     #[Test]
+    public function mux_data_tracks_and_sets_cookies_unless_the_site_turns_them_off()
+    {
+        $html = $this->render('{{ popcorn:player :video="video" }}', ['video' => $this->video()]);
+
+        $this->assertStringNotContainsString('disable-tracking', $html);
+        $this->assertStringNotContainsString('disable-cookies', $html);
+
+        config()->set('statamic-popcorn.player.disable_tracking', true);
+        config()->set('statamic-popcorn.player.disable_cookies', 'true');
+
+        $html = $this->render('{{ popcorn:player :video="video" }}', ['video' => $this->video()]);
+
+        $this->assertStringContainsString(' disable-tracking', $html);
+        $this->assertStringContainsString(' disable-cookies', $html);
+    }
+
+    #[Test]
+    public function a_template_can_override_the_sites_privacy_defaults()
+    {
+        config()->set('statamic-popcorn.player.disable_tracking', true);
+        config()->set('statamic-popcorn.player.disable_cookies', true);
+
+        // As a consent check would: a variable that is false once the visitor
+        // has agreed, and a literal for the other.
+        $html = $this->render('{{ popcorn:player :video="video" :disable-tracking="no_consent" disable-cookies="false" }}', [
+            'video' => $this->video(),
+            'no_consent' => false,
+        ]);
+
+        $this->assertStringNotContainsString('disable-tracking', $html);
+        $this->assertStringNotContainsString('disable-cookies', $html);
+    }
+
+    #[Test]
     public function no_video_renders_nothing()
     {
         $this->assertSame('', trim($this->render('{{ popcorn:player :video="video" }}', ['video' => null])));

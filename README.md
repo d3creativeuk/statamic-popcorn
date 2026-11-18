@@ -96,7 +96,7 @@ Then play a field:
 
 Every parameter other than `video` becomes an attribute on `<mux-player>`, so anything [Mux Player supports](https://www.mux.com/docs/guides/player-api-reference) can be set from the template. A parameter set to `true` becomes a bare attribute (`muted="true"` gives `muted`); `false` leaves it out.
 
-The title is always sent to Mux Data as `metadata-video-title`, so views are reported against it. It is only drawn on the player when **Show Title** is on.
+The title is sent to Mux Data as `metadata-video-title`, so views are reported against it, unless tracking is turned off (see [Privacy](#privacy)). It is only drawn on the player when **Show Title** is on.
 
 The player is given `display: block`, ahead of any `style` you pass. Mux Player is otherwise inline-block, which leaves a small gap below it, so in a box with rounded corners the bottom corners would be drawn in the gap rather than on the video. Set `display` in your own `style` to change it.
 
@@ -118,6 +118,43 @@ The player is given `display: block`, ahead of any `style` you pass. Mux Player 
 
 The field is a `PopcornVideo` type with the same keys.
 
+## Privacy
+
+Mux Player sends viewing data to Mux unless you turn it off. Out of the box, every view is reported to [Mux Data](https://www.mux.com/docs/guides/ensure-data-privacy-compliance), Mux's analytics service: what was watched and for how long, playback quality and errors, and the viewer's device, operating system and browser. Mux uses the viewer's IP address to estimate their country and region and to filter out bots, then truncates it before storing it. It also sets a first-party cookie called `muxData`, holding a random viewer ID and session details, which lasts up to a year. Mux keeps this view data for up to 100 days.
+
+In the UK and EU that cookie and the analytics usually need the visitor's consent. Turn either off for the whole site in `.env`:
+
+```
+POPCORN_DISABLE_TRACKING=true
+POPCORN_DISABLE_COOKIES=true
+```
+
+`POPCORN_DISABLE_TRACKING` stops Mux Data altogether, and with it the cookie. `POPCORN_DISABLE_COOKIES` keeps the analytics but without the cookie, so Mux can no longer tell a returning viewer from a new one.
+
+A template can override either setting for one player. To track only once a visitor has agreed, pass whatever your consent setup gives you:
+
+```antlers
+{{ popcorn:player :video="hero_video" :disable-tracking="no_analytics_consent" }}
+```
+
+These settings only reach players drawn by `{{ popcorn:player }}`. If you write `<mux-player>` yourself, add `disable-tracking` and `disable-cookies` to it.
+
+Whatever you choose, the video and its preview image are still delivered from Mux's servers (`stream.mux.com`, `image.mux.com`), which see the viewer's IP address and browser as any server does. `{{ popcorn:scripts }}` loads the player from jsDelivr, which sees the same. Mux Player also remembers a viewer's volume and mute settings in their browser's local storage; the `no-volume-pref` and `no-muted-pref` attributes turn that off.
+
+### Wording for your privacy policy
+
+Copy the paragraph that matches your settings, then adjust it to your site. It is a starting point written from Mux's documentation, not legal advice, so have it checked if you are unsure. Mux's own position is in its [privacy policy](https://www.mux.com/privacy) and [data processing addendum](https://www.mux.com/dpa).
+
+**With tracking and cookies on** (the default):
+
+> Videos on this website are hosted and played by Mux, Inc., a video platform based in the United States. When you watch a video, your browser loads it from Mux's servers, which receive your IP address and information about your browser and device. Mux also collects viewing statistics for us through its Mux Data service: which video you watched, how much of it you played, the playback quality and any errors, and your device type, operating system and browser. Mux uses your IP address to estimate your country and region and to filter out automated traffic, then shortens it before storing it; it does not collect your name or email address. To recognise repeat views, Mux sets a cookie on this website called `muxData`, which holds a random viewer ID and session details and lasts for up to a year. Mux keeps viewing statistics for up to 100 days. Mux processes this data on our behalf and may transfer it to the United States, under the EU–US Data Privacy Framework and its UK Extension. You can read more in Mux's privacy policy at https://www.mux.com/privacy.
+
+**With tracking and cookies off** (`POPCORN_DISABLE_TRACKING=true`):
+
+> Videos on this website are hosted and played by Mux, Inc., a video platform based in the United States. When you watch a video, your browser loads it and its preview image from Mux's servers, which receive your IP address and information about your browser and device in order to deliver it. We have turned off Mux's viewing statistics, so Mux does not collect analytics about what you watch for us, and the video player sets no cookies. You can read more in Mux's privacy policy at https://www.mux.com/privacy.
+
+If you keep tracking but turn cookies off, use the first paragraph without the sentence about the `muxData` cookie. If you load the player with `{{ popcorn:scripts }}`, add: "The video player itself is loaded from jsDelivr, a public content delivery network, which receives your IP address and browser information."
+
 ## Configuration
 
 Publish the config to change the defaults:
@@ -132,6 +169,8 @@ php artisan vendor:publish --tag=statamic-popcorn-config
 | `mux.video_quality` | `POPCORN_MUX_VIDEO_QUALITY`, or your Mux account's default | `basic`, `plus` or `premium` for videos Popcorn creates. It changes what Mux charges, so check Mux's pricing first |
 | `mux.per_page` | `50` | How many videos Browse Mux asks for at a time (Mux allows up to 100) |
 | `player.script` | jsDelivr's `@mux/mux-player@3` | Where `{{ popcorn:scripts }}` loads Mux Player from |
+| `player.disable_tracking` | `POPCORN_DISABLE_TRACKING`, or `false` | Stop Mux Data reporting views from every `{{ popcorn:player }}`. See [Privacy](#privacy) |
+| `player.disable_cookies` | `POPCORN_DISABLE_COOKIES`, or `false` | Stop Mux Data setting its `muxData` cookie. See [Privacy](#privacy) |
 | `poll_interval` | `3000` | Milliseconds between status checks while Mux receives or prepares a video |
 
 ## When Mux refuses

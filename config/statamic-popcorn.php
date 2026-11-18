@@ -41,6 +41,13 @@ return [
 
     'player' => [
         'script' => 'https://cdn.jsdelivr.net/npm/@mux/mux-player@3',
+
+        // Mux Player reports every view to Mux Data and sets a "muxData"
+        // cookie unless told not to. These are the defaults for every
+        // {{ popcorn:player }}; a template can override either one, for
+        // example to turn tracking on only once a visitor has consented.
+        'disable_tracking' => env('POPCORN_DISABLE_TRACKING', false),
+        'disable_cookies' => env('POPCORN_DISABLE_COOKIES', false),
     ],
 
     // Milliseconds between status checks while Mux receives or processes a
