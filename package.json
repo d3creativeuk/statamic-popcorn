@@ -3,8 +3,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite build --watch"
+        "build": "vite build && node scripts/third-party-notices.mjs",
+        "dev": "vite build --watch",
+        "notices": "node scripts/third-party-notices.mjs"
     },
     "dependencies": {
         "@mux/mux-uploader": "^1.4.1",

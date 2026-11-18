@@ -161,6 +161,8 @@ The field is a `PopcornVideo` type with the same keys.
 
 ## Privacy
 
+> **This section is general information, not legal advice.** It describes how Popcorn and Mux behave, as checked against Mux's documentation, its data processing addendum (updated 12 October 2026) and the code Popcorn ships, on 18 November 2026. Privacy law differs between countries and US states and changes often, and Mux can change its services and terms. Whether a site complies depends on everything else it does, not only on Popcorn. You, as the site owner, are responsible for your own compliance: have your privacy policy, cookie banner and settings reviewed by a qualified lawyer, especially if your organisation has faced privacy claims before. Popcorn is provided "as is" under the [MIT licence](LICENSE), without warranty of any kind, and D3 Creative accepts no liability for how it is configured or used.
+
 **Popcorn turns tracking and cookies off by default.** Out of the box, `{{ popcorn:player }}` plays videos without Mux Data, Mux's analytics service: nothing is reported about what visitors watch, no cookie is set, and Mux Data's code isn't even loaded. Previews in the Control Panel are never tracked either.
 
 Even then, the video and its poster are delivered from Mux's servers (`stream.mux.com`, `image.mux.com` and Mux's delivery network), which see the viewer's IP address and browser as any server does. Mux does this as your processor under its [data processing addendum](https://www.mux.com/dpa). The player itself comes from your own site, so no other third party is involved, unless you set `POPCORN_PLAYER_CDN`.
@@ -224,7 +226,7 @@ In the UK and EU, analytics like this usually need the visitor's consent. A temp
 
 ### Wording for your privacy policy
 
-Copy the paragraph that matches your settings, then adjust it to your site. It is a starting point written from Mux's documentation, not legal advice, so have it checked if you are unsure. Mux's own position is in its [privacy policy](https://www.mux.com/privacy) and [data processing addendum](https://www.mux.com/dpa) ([PDF](https://www.mux.com/files/mux-dpa.pdf)). The addendum names Mux as your processor for the IP addresses, browser details and approximate location of people watching your videos, whether or not Mux Data is on, so the transfer sentence belongs in both versions.
+Copy the paragraph that matches your settings, then adjust it to your site. These are starting points, not finished legal text: they describe only Popcorn and Mux, and your policy also has to cover everything else your site does. Have the result checked by a lawyer before you publish it (see the [note above](#privacy)). Mux's own position is in its [privacy policy](https://www.mux.com/privacy) and [data processing addendum](https://www.mux.com/dpa) ([PDF](https://www.mux.com/files/mux-dpa.pdf)). The addendum names Mux as your processor for the IP addresses, browser details and approximate location of people watching your videos, whether or not Mux Data is on, so the transfer sentence belongs in both versions.
 
 **With tracking and cookies off** (the default):
 
@@ -238,13 +240,13 @@ If you turn tracking on but leave cookies off, use the second paragraph without 
 
 ### In the United States
 
-The US has no cookie-consent law like the UK's and EU's. The risk is litigation: suits under California's Invasion of Privacy Act (CIPA), the federal Video Privacy Protection Act (VPPA) and the California Consumer Privacy Act (CCPA) have targeted sites whose third-party scripts collect data from visitors. This is how Popcorn stands against each with its defaults, and what would change that. It is not legal advice; have your counsel review it.
+The US has no cookie-consent law like the UK's and EU's. The risk is litigation: suits under California's Invasion of Privacy Act (CIPA), the federal Video Privacy Protection Act (VPPA) and the California Consumer Privacy Act (CCPA) have targeted sites whose third-party scripts collect data from visitors. This is how Popcorn stands against each with its defaults, and what would change that. It is an outline of the issues to raise with your counsel, not legal advice and not a guarantee that a site cannot be sued; see the [note above](#privacy). Case law in this area is unsettled and moves quickly.
 
 - **CIPA "wiretap" and "pen register" claims** argue that a third party received visitors' data, such as their IP address, without consent. With tracking off and the player served from your site, the only outside party a visitor's browser contacts is Mux, and only to deliver the video. Mux's data processing addendum (section 11) makes Mux your CCPA "service provider": it may not sell or share the data, use it for anything else, or combine it with other data. Turning tracking on adds analytics, which is what these suits are about, and setting `POPCORN_PLAYER_CDN` adds a third party with no such agreement. For the strongest position, use [click-to-play](#contacting-mux-only-when-someone-presses-play), so that nothing is sent to anyone until a visitor chooses to watch.
 - **VPPA claims** are about passing "this person watched this video" to someone who can identify them, usually an advertising pixel such as Meta's. Popcorn never sends anything that identifies a viewer. Even with tracking on, Mux Data receives the video's title and ID with a random viewer ID, or none unless cookies are on. Never add `metadata-viewer-user-id` with a name, email or account ID. The larger VPPA risk on any site is an advertising pixel on pages that play video, which Popcorn has nothing to do with.
 - **CCPA and CPRA.** Passing data to a service provider is not a "sale" or "share", so Popcorn needs no "Do Not Sell or Share" or Global Privacy Control handling. Your privacy policy should still say that video is hosted by Mux; the paragraph for tracking off covers it.
 
-For a site that is sensitive to this, keep the defaults (tracking and cookies off, no CDN), consider click-to-play, confirm that Mux's data processing addendum applies to your Mux account, and add the paragraph for tracking off to your privacy policy.
+For a site that is sensitive to this, and subject to your counsel's advice, keep the defaults (tracking and cookies off, no CDN), consider click-to-play, confirm that Mux's data processing addendum applies to your Mux account, and add the paragraph for tracking off to your privacy policy.
 
 ## Configuration
 
@@ -280,4 +282,6 @@ Report bugs and request features on [GitHub](https://github.com/d3creativeuk/sta
 
 ## Licence
 
-MIT. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE). The compiled player and uploader include open-source packages under the MIT, Apache 2.0 and BSD licences; their licences and notices are in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+Popcorn is not made by, affiliated with or endorsed by Mux, Inc. or the Video.js project. Mux is a trademark of Mux, Inc., and Video.js is a registered trademark of Brightcove Inc.
