@@ -6,6 +6,8 @@ Popcorn adds a **Popcorn Video** field. Editors upload a video from their comput
 
 Mux is the only video host for now. The field is built so that others can be added beside it without changing content saved today.
 
+![Popcorn by D3 Creative](art/popcorn-art.jpg)
+
 ## Requirements
 
 - Statamic 6
