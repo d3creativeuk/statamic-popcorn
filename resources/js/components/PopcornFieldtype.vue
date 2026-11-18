@@ -379,7 +379,7 @@ function remove() {
                 <p v-if="transfer.progress !== null && transfer.message" class="text-xs text-gray-500 dark:text-gray-400" v-text="transfer.message" />
             </div>
 
-            <Button v-if="mode === 'upload' && !transfer" size="sm" variant="ghost" :text="__('Cancel')" @click="cancelUpload" />
+            <Button v-if="mode === 'upload' && !transfer" size="sm" :text="__('Cancel')" @click="cancelUpload" />
         </div>
 
         <!-- Nothing chosen and nothing that can be done -->
