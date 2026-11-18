@@ -45,9 +45,9 @@ class Popcorn extends Tags
         $title = filled($video['title'] ?? null) ? $video['title'] : null;
         $params = $this->params->except(['video', 'style', 'class', 'accent-color', 'tracking', 'cookies'])->all();
 
-        $player = $this->attributes([
-            'content-title' => ($video['show_title'] ?? false) ? $title : null,
-        ]);
+        // Always set. Without it, Video.js shows the title Mux has for the
+        // asset; an empty one is how "Show Title" off hides it.
+        $player = ' content-title="'.e(($video['show_title'] ?? false) ? (string) $title : '').'"';
 
         $skin = $this->attributes([
             'class' => $this->params->get('class'),

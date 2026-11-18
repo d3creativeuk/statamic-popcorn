@@ -106,7 +106,7 @@ Each parameter goes to the element it belongs to:
 | `metadata-*` | Mux Data, when tracking is on |
 | Anything else | `<mux-video>`: `autoplay`, `muted`, `loop`, `poster-time` and the rest of the [Video.js media attributes](https://videojs.org/docs/framework/html/guides/migrate-from-mux-player/) |
 
-A parameter set to `true` becomes a bare attribute (`muted="true"` gives `muted`); `false` leaves it out. The title is drawn on the player, as its `content-title`, only when **Show Title** is on.
+A parameter set to `true` becomes a bare attribute (`muted="true"` gives `muted`); `false` leaves it out. The title is drawn on the player, as its `content-title`, only when **Show Title** is on. Otherwise `content-title` is set to an empty string, because without it Video.js shows the title Mux has for the video.
 
 The skin is given `display: block`, ahead of any `style` you pass, as in Mux's own example. That makes it fill its box without a small gap below it, so in a box with rounded corners the bottom corners are drawn on the video. Set `display` in your own `style` to change it.
 
@@ -118,7 +118,7 @@ Mux Player and Video.js both define a `<mux-video>` element, and a page can only
 
 ```antlers
 {{ hero_video }}
-    <video-player {{ if show_title }}content-title="{{ title }}"{{ /if }}>
+    <video-player content-title="{{ if show_title }}{{ title }}{{ /if }}">
         <video-skin style="display: block; aspect-ratio: 16 / 9;">
             <mux-video src="{{ stream_url }}" playsinline crossorigin="anonymous"></mux-video>
         </video-skin>
@@ -134,7 +134,7 @@ The field is a `PopcornVideo` type with the same keys.
 
 **Popcorn turns tracking and cookies off by default.** Out of the box, `{{ popcorn:player }}` plays videos without Mux Data, Mux's analytics service: nothing is reported about what visitors watch, no cookie is set, and Mux Data's code isn't even loaded. Previews in the Control Panel are never tracked either.
 
-Even then, the video and its poster are delivered from Mux's servers (`stream.mux.com`, `image.mux.com`), which see the viewer's IP address and browser as any server does, and `{{ popcorn:scripts }}` loads the player from jsDelivr, which sees the same.
+Even then, the video and its poster are delivered from Mux's servers (`stream.mux.com`, `image.mux.com` and Mux's delivery network), which see the viewer's IP address and browser as any server does, and `{{ popcorn:scripts }}` loads the player from jsDelivr, which sees the same.
 
 ### Turning tracking on
 
@@ -166,15 +166,15 @@ In the UK and EU, analytics like this usually need the visitor's consent. A temp
 
 ### Wording for your privacy policy
 
-Copy the paragraph that matches your settings, then adjust it to your site. It is a starting point written from Mux's documentation, not legal advice, so have it checked if you are unsure. Mux's own position is in its [privacy policy](https://www.mux.com/privacy) and [data processing addendum](https://www.mux.com/dpa).
+Copy the paragraph that matches your settings, then adjust it to your site. It is a starting point written from Mux's documentation, not legal advice, so have it checked if you are unsure. Mux's own position is in its [privacy policy](https://www.mux.com/privacy) and [data processing addendum](https://www.mux.com/dpa) ([PDF](https://www.mux.com/files/mux-dpa.pdf)). The addendum names Mux as your processor for the IP addresses, browser details and approximate location of people watching your videos, whether or not Mux Data is on, so the transfer sentence belongs in both versions.
 
 **With tracking and cookies off** (the default):
 
-> Videos on this website are hosted by Mux, Inc., a video platform based in the United States. When you watch a video, your browser loads it and its preview image from Mux's servers, which receive your IP address and information about your browser and device in order to deliver it. We do not use Mux's viewing statistics, so Mux does not collect analytics about what you watch for us, and the video player sets no cookies. You can read more in Mux's privacy policy at https://www.mux.com/privacy.
+> Videos on this website are hosted by Mux, Inc., a video platform based in the United States. When you watch a video, your browser loads it and its preview image from Mux's servers, which receive your IP address and information about your browser and device in order to deliver it. Mux processes this information on our behalf and may transfer it to the United States, under the EU–US Data Privacy Framework and its UK Extension, or standard contractual clauses where those do not apply. We do not use Mux's viewing statistics, so Mux does not collect analytics about what you watch for us, and the video player sets no cookies. You can read more in Mux's privacy policy at https://www.mux.com/privacy.
 
 **With tracking and cookies on** (`POPCORN_TRACKING=true` and `POPCORN_TRACKING_COOKIES=true`):
 
-> Videos on this website are hosted by Mux, Inc., a video platform based in the United States. When you watch a video, your browser loads it from Mux's servers, which receive your IP address and information about your browser and device. Mux also collects viewing statistics for us through its Mux Data service: which video you watched, how much of it you played, the playback quality and any errors, and your device type, operating system and browser. Mux uses your IP address to estimate your country and region and to filter out automated traffic, then shortens it before storing it; it does not collect your name or email address. To recognise repeat views, Mux sets a cookie on this website called `muxData`, which holds a random viewer ID and session details and lasts for up to a year. Mux keeps viewing statistics for up to 100 days. Mux processes this data on our behalf and may transfer it to the United States, under the EU–US Data Privacy Framework and its UK Extension. You can read more in Mux's privacy policy at https://www.mux.com/privacy.
+> Videos on this website are hosted by Mux, Inc., a video platform based in the United States. When you watch a video, your browser loads it from Mux's servers, which receive your IP address and information about your browser and device. Mux also collects viewing statistics for us through its Mux Data service: which video you watched, how much of it you played, the playback quality and any errors, and your device type, operating system and browser. Mux uses your IP address to estimate your country and region and to filter out automated traffic, then shortens it before storing it; it does not collect your name or email address. To recognise repeat views, Mux sets a cookie on this website called `muxData`, which holds a random viewer ID and session details and lasts for up to a year. Mux keeps viewing statistics for up to 100 days. Mux processes this data on our behalf and may transfer it to the United States, under the EU–US Data Privacy Framework and its UK Extension, or standard contractual clauses where those do not apply. You can read more in Mux's privacy policy at https://www.mux.com/privacy.
 
 If you turn tracking on but leave cookies off, use the second paragraph without the sentence about the `muxData` cookie. If you load the player with `{{ popcorn:scripts }}`, add to either: "The video player itself is loaded from jsDelivr, a public content delivery network, which receives your IP address and browser information."
 

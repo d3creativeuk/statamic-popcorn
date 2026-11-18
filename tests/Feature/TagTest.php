@@ -31,7 +31,7 @@ class TagTest extends TestCase
     public function the_player_is_video_js_with_the_mux_stream()
     {
         $this->assertSame(
-            '<video-player><video-skin style="display: block;"><mux-video src="https://stream.mux.com/Play1.m3u8" playsinline crossorigin="anonymous"></mux-video></video-skin></video-player>',
+            '<video-player content-title=""><video-skin style="display: block;"><mux-video src="https://stream.mux.com/Play1.m3u8" playsinline crossorigin="anonymous"></mux-video></video-skin></video-player>',
             $this->render('{{ popcorn:player :video="video" }}', ['video' => $this->video()]),
         );
     }
@@ -39,7 +39,9 @@ class TagTest extends TestCase
     #[Test]
     public function the_title_is_drawn_only_when_the_editor_asked()
     {
-        $this->assertStringNotContainsString('content-title', $this->render('{{ popcorn:player :video="video" }}', ['video' => $this->video()]));
+        // Empty rather than missing: without it, Video.js shows the title
+        // Mux has for the asset.
+        $this->assertStringContainsString('<video-player content-title="">', $this->render('{{ popcorn:player :video="video" }}', ['video' => $this->video()]));
 
         $html = $this->render('{{ popcorn:player :video="video" }}', ['video' => $this->video(['show_title' => true])]);
 
