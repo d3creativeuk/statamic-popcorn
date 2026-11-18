@@ -94,6 +94,10 @@ class FieldtypeTest extends TestCase
         $meta = $this->fieldtype()->preload();
 
         $this->assertTrue($meta['can']);
+        $this->assertSame([], $meta['containers'], 'The asset library is off unless the field turns it on');
+
+        $meta = $this->fieldtype(['allow_assets' => true])->preload();
+
         $this->assertSame('assets', $meta['containers'][0]['handle']);
         $this->assertFalse($meta['containers'][0]['browser']['can_upload']);
         $this->assertFalse($meta['containers'][0]['browser']['can_create_folders']);

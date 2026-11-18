@@ -37,6 +37,14 @@ class Popcorn extends Fieldtype
     protected function configFieldItems(): array
     {
         return [
+            // Off by default: Popcorn is for video that lives on Mux, and this
+            // is a way to move a library across, not the usual route in.
+            'allow_assets' => [
+                'display' => __('Allow Choosing from Assets'),
+                'instructions' => __('Show a Choose from Assets button, to send a copy of a video already in the asset library to Mux.'),
+                'type' => 'toggle',
+                'default' => false,
+            ],
             'allow_reupload' => [
                 'display' => __('Allow Replacing'),
                 'instructions' => __('Show a Remove button once a video is chosen, so it can be replaced.'),
@@ -64,8 +72,9 @@ class Popcorn extends Fieldtype
                 'asset' => cp_route('popcorn.mux.assets.show', '__id__'),
                 'title' => cp_route('popcorn.mux.assets.title', '__id__'),
             ],
-            // Only worth building when the user can send a library video.
-            'containers' => $can ? VideoAssets::containers($user) : [],
+            // Only worth building when the field offers the asset library and
+            // the user can send a video from it.
+            'containers' => $can && $this->config('allow_assets', false) ? VideoAssets::containers($user) : [],
             'videoExtensions' => VideoAssets::EXTENSIONS,
         ];
     }

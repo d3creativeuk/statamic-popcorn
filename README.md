@@ -42,7 +42,7 @@ To send a video from the asset library, a user also needs to be able to view the
 | Button | What it does |
 |---|---|
 | Upload | Asks for a title, then takes a file by drag and drop or file picker and uploads it from the browser straight to Mux. It never passes through your server, so PHP's upload limits do not apply. |
-| Choose from Assets | Opens Statamic's own asset browser on any container you can view. Choose a video file and your server sends a copy to Mux. The file stays in your library. |
+| Choose from Assets | Off by default. Turn on **Allow Choosing from Assets** in the field's settings to show it. Opens Statamic's own asset browser on any container you can view. Choose a video file and your server sends a copy to Mux. The file stays in your library. |
 | Browse Mux | Lists the videos in your Mux account that are ready to play, in a grid or a table, with search by title. Double-click a video to choose it straight away. |
 
 Once a video is chosen the field shows it in Mux Player, with:

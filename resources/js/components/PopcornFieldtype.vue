@@ -25,7 +25,7 @@ const urls = computed(() => meta.value.urls ?? {});
 const hasVideo = computed(() => !!props.value?.playback_id);
 const allowReplacing = computed(() => props.config.allow_reupload !== false);
 const canManage = computed(() => !!meta.value.can && !!meta.value.configured && !isReadOnly.value);
-const canPick = computed(() => canManage.value && (meta.value.containers ?? []).length > 0);
+const canPick = computed(() => canManage.value && props.config.allow_assets === true && (meta.value.containers ?? []).length > 0);
 
 // "upload" while the title and drop zone for a new file are showing.
 const mode = ref(null);
