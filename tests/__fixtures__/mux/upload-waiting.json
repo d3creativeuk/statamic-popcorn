@@ -1,0 +1,15 @@
+{
+    "data": {
+        "id": "UploadNew00000000000000000000000000000001",
+        "url": "https://storage.googleapis.com/video-storage-gcp-us-east1-vop1-uploads/UploadNew?Expires=1794700000&Signature=redacted",
+        "timeout": 3600,
+        "status": "waiting",
+        "new_asset_settings": {
+            "playback_policies": [
+                "public"
+            ],
+            "video_quality": "basic"
+        },
+        "cors_origin": "http://localhost"
+    }
+}

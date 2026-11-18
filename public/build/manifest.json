@@ -1,0 +1,33 @@
+{
+  "_mux-player-eg7ZZe7a.js": {
+    "file": "assets/mux-player-eg7ZZe7a.js",
+    "name": "mux-player",
+    "imports": [
+      "_rolldown-runtime-DK3Fl9T5.js"
+    ]
+  },
+  "_mux-uploader-Wc6-4rub.js": {
+    "file": "assets/mux-uploader-Wc6-4rub.js",
+    "name": "mux-uploader",
+    "imports": [
+      "_rolldown-runtime-DK3Fl9T5.js"
+    ]
+  },
+  "_rolldown-runtime-DK3Fl9T5.js": {
+    "file": "assets/rolldown-runtime-DK3Fl9T5.js",
+    "name": "rolldown-runtime"
+  },
+  "resources/js/addon.js": {
+    "file": "assets/addon-CpOZCPdv.js",
+    "name": "addon",
+    "src": "resources/js/addon.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "_mux-player-eg7ZZe7a.js",
+      "_mux-uploader-Wc6-4rub.js"
+    ],
+    "css": [
+      "assets/addon-Dg8_DpIq.css"
+    ]
+  }
+}

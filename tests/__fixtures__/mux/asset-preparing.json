@@ -1,0 +1,27 @@
+{
+    "data": {
+        "video_quality": "basic",
+        "upload_id": "UploadPreparing000000000000000000000000001",
+        "tracks": [],
+        "status": "preparing",
+        "progress": {
+            "state": "ingesting",
+            "progress": 12
+        },
+        "playback_ids": [
+            {
+                "policy": "public",
+                "id": "PlaybackPreparing0000000000000000000000001"
+            }
+        ],
+        "mp4_support": "none",
+        "meta": {
+            "title": "Still preparing"
+        },
+        "max_resolution_tier": "2160p",
+        "master_access": "none",
+        "ingest_type": "on_demand_direct_upload",
+        "id": "AssetPreparing00000000000000000000000000001",
+        "created_at": "1794600000"
+    }
+}

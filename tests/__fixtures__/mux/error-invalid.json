@@ -1,0 +1,8 @@
+{
+    "error": {
+        "type": "invalid_parameters",
+        "messages": [
+            "meta.title must be 512 characters or fewer"
+        ]
+    }
+}
