@@ -51,12 +51,17 @@ return [
     | they usually need a visitor's consent. A template can override either
     | for one player, for example once a visitor has agreed.
     |
+    | "border_radius" rounds the player's corners: any CSS length, or a
+    | number of pixels. Null keeps the Video.js skin's 28px. A template's
+    | border-radius parameter overrides it for one player.
+    |
     */
 
     'player' => [
         'cdn' => env('POPCORN_PLAYER_CDN'),
         'tracking' => env('POPCORN_TRACKING', false),
         'cookies' => env('POPCORN_TRACKING_COOKIES', false),
+        'border_radius' => env('POPCORN_PLAYER_BORDER_RADIUS'),
     ],
 
     // Milliseconds between status checks while Mux receives or processes a

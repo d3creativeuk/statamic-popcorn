@@ -104,6 +104,7 @@ Each parameter goes to the element it belongs to:
 |---|---|
 | `style`, `class` | `<video-skin>`, which is the box you see |
 | `accent-color` | The skin's `--media-accent-color` |
+| `border-radius` | The skin's `--media-border-radius`, which rounds its corners. Any CSS length, or a number of pixels (`border-radius="0"` for square corners). Without it, `player.border_radius` or the skin's own 28px |
 | `tracking`, `cookies` | Whether Mux Data is on for this player. See [Privacy](#privacy) |
 | `metadata-*` | Mux Data, when tracking is on |
 | Anything else | `<mux-video>`: `autoplay`, `muted`, `loop`, `poster-time` and the rest of the [Video.js media attributes](https://videojs.org/docs/framework/html/guides/migrate-from-mux-player/) |
@@ -266,6 +267,7 @@ php artisan vendor:publish --tag=statamic-popcorn-config
 | `player.cdn` | `POPCORN_PLAYER_CDN`, or `null` | An `@videojs/cdn` release to load Video.js from instead of your own site. Best left `null`. See [With the player tag](#with-the-player-tag) |
 | `player.tracking` | `POPCORN_TRACKING`, or `false` | Report views to Mux Data from every `{{ popcorn:player }}`. See [Privacy](#privacy) |
 | `player.cookies` | `POPCORN_TRACKING_COOKIES`, or `false` | Let Mux Data set its `muxData` cookie when tracking is on. See [Privacy](#privacy) |
+| `player.border_radius` | `POPCORN_PLAYER_BORDER_RADIUS`, or `null` | The corner radius of every `{{ popcorn:player }}`: any CSS length, or a number of pixels. `null` keeps the skin's 28px. In full screen the corners are always square |
 | `poll_interval` | `3000` | Milliseconds between status checks while Mux receives or prepares a video |
 
 ## When Mux refuses

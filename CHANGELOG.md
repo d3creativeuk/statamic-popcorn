@@ -8,6 +8,10 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 
 ## [Unreleased]
 
+### Added
+
+- A `border-radius` parameter on `{{ popcorn:player }}`, and a `player.border_radius` config default (`POPCORN_PLAYER_BORDER_RADIUS`), set the player's corner radius. Without either, the Video.js skin keeps its 28px.
+
 ## [1.0.0] - 2026-11-18
 
 First release. Requires Statamic 6.34 or later and PHP 8.3 or later; tested on Statamic 6.42.

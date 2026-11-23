@@ -66,6 +66,29 @@ class TagTest extends TestCase
     }
 
     #[Test]
+    public function the_corners_keep_the_skins_radius_unless_the_site_or_template_sets_one()
+    {
+        $render = fn (string $params = '') => $this->render("{{ popcorn:player :video=\"video\" {$params} }}", ['video' => $this->video()]);
+
+        $this->assertStringNotContainsString('--media-border-radius', $render());
+
+        config()->set('statamic-popcorn.player.border_radius', 8);
+
+        $this->assertStringContainsString('<video-skin style="display: block; --media-border-radius: 8px;">', $render());
+
+        // A bare number is pixels; anything else is passed through as CSS.
+        $this->assertStringContainsString('<video-skin style="display: block; --media-border-radius: 0px;">', $render('border-radius="0"'));
+        $this->assertStringContainsString('<video-skin style="display: block; --media-accent-color: #0061ff; --media-border-radius: 1rem;">', $render('accent-color="#0061ff" border-radius="1rem"'));
+        $this->assertStringNotContainsString('border-radius="', $render('border-radius="1rem"'));
+
+        // The template's own style comes after, so it wins.
+        $this->assertStringContainsString(
+            '<video-skin style="display: block; --media-border-radius: 8px; --media-border-radius: 0;">',
+            $render('style="--media-border-radius: 0;"'),
+        );
+    }
+
+    #[Test]
     public function the_skin_is_a_block_so_a_rounded_box_rounds_its_bottom_corners_too()
     {
         $html = $this->render('{{ popcorn:player :video="video" style="aspect-ratio: 16/9; width: 100%;" }}', ['video' => $this->video()]);

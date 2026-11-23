@@ -18,8 +18,8 @@ use Throwable;
  * The player is three elements: <video-player> holds the state, <video-skin>
  * draws the controls, and <mux-video> plays the stream. A <mux-data> element
  * is added only when tracking is on. Parameters go where they mean
- * something: "style" and "class" to the skin, "accent-color" to the skin's
- * accent, "metadata-*" to Mux Data, and the rest (autoplay, muted, loop,
+ * something: "style" and "class" to the skin, "accent-color" and
+ * "border-radius" to the skin's variables, "metadata-*" to Mux Data, and the rest (autoplay, muted, loop,
  * poster-time and so on) to <mux-video>. A parameter set to true becomes a
  * bare attribute; false leaves it out.
  */
@@ -54,7 +54,7 @@ class Popcorn extends Tags
         }
 
         $title = filled($video['title'] ?? null) ? $video['title'] : null;
-        $params = $this->params->except(['video', 'style', 'class', 'accent-color', 'tracking', 'cookies'])->all();
+        $params = $this->params->except(['video', 'style', 'class', 'accent-color', 'border-radius', 'tracking', 'cookies'])->all();
 
         // Always set. Without it, Video.js shows the title Mux has for the
         // asset; an empty one is how "Show Title" off hides it.
@@ -62,7 +62,10 @@ class Popcorn extends Tags
 
         $skin = $this->attributes([
             'class' => $this->params->get('class'),
-            'style' => $this->style($this->params->get('style'), $this->params->get('accent-color')),
+            'style' => $this->style($this->params->get('style'), [
+                '--media-accent-color' => $this->params->get('accent-color'),
+                '--media-border-radius' => $this->borderRadius(),
+            ]),
         ]);
 
         $media = $this->attributes([
@@ -143,21 +146,42 @@ class Popcorn extends Tags
      * The skin is given display: block, as Mux's own example does, so it
      * fills its box and leaves no gap below it the height of a text
      * descender (which would sit under rounded bottom corners). A template
-     * that sets its own display keeps it.
+     * that sets its own display keeps it. The skin's variables go ahead of
+     * the template's style, so a style that sets one wins.
      */
-    protected function style($style, $accent): string
+    protected function style($style, array $variables): string
     {
         $style = trim((string) ($style === true ? '' : $style));
 
-        if (is_string($accent) && $accent !== '') {
-            $style = trim('--media-accent-color: '.$accent.'; '.$style);
-        }
+        $declarations = collect($variables)
+            ->filter(fn ($value) => is_string($value) && $value !== '')
+            ->map(fn ($value, $name) => "{$name}: {$value};")
+            ->implode(' ');
+
+        $style = trim($declarations.' '.$style);
 
         if (preg_match('/(^|;)\s*display\s*:/i', $style)) {
             return $style;
         }
 
         return trim('display: block; '.$style);
+    }
+
+    /**
+     * The skin's corner radius, 28px unless the template or the config sets
+     * one. A bare number is taken as pixels.
+     */
+    protected function borderRadius(): ?string
+    {
+        $value = $this->params->has('border-radius')
+            ? $this->params->get('border-radius')
+            : config('statamic-popcorn.player.border_radius');
+
+        if (is_int($value) || is_float($value) || (is_string($value) && is_numeric(trim($value)))) {
+            return trim((string) $value).'px';
+        }
+
+        return is_string($value) ? trim($value) : null;
     }
 
     protected function attributes(array $attributes): string
