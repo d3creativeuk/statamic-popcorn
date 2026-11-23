@@ -24,13 +24,13 @@
       "_webkit-CikxgAon.js"
     ]
   },
-  "_player-CY5Ehi79.js": {
-    "file": "assets/player-CY5Ehi79.js",
+  "_player-5U9D4FLO.js": {
+    "file": "assets/player-5U9D4FLO.js",
     "name": "player",
     "imports": [
       "_rolldown-runtime-DK3Fl9T5.js",
       "_media-target-DOhxUIFT.js",
-      "_volume-yJQeGK5m.js",
+      "_volume-Bxc7Azyc.js",
       "_predicate-DKs7lvvm.js",
       "_webkit-CikxgAon.js"
     ]
@@ -42,23 +42,23 @@
       "_media-target-DOhxUIFT.js"
     ]
   },
-  "_preload-helper-odF-skvc.js": {
-    "file": "assets/preload-helper-odF-skvc.js",
+  "_preload-helper-DclECHGd.js": {
+    "file": "assets/preload-helper-DclECHGd.js",
     "name": "preload-helper"
   },
   "_rolldown-runtime-DK3Fl9T5.js": {
     "file": "assets/rolldown-runtime-DK3Fl9T5.js",
     "name": "rolldown-runtime"
   },
-  "_skin-Jyn8UqMu.js": {
-    "file": "assets/skin-Jyn8UqMu.js",
+  "_skin-UwbBeVOs.js": {
+    "file": "assets/skin-UwbBeVOs.js",
     "name": "skin",
     "imports": [
       "_rolldown-runtime-DK3Fl9T5.js",
-      "_preload-helper-odF-skvc.js",
+      "_preload-helper-DclECHGd.js",
       "_media-target-DOhxUIFT.js",
       "_predicate-DKs7lvvm.js",
-      "_volume-yJQeGK5m.js",
+      "_volume-Bxc7Azyc.js",
       "_webkit-CikxgAon.js",
       "_media-error-CF_ymMWN.js"
     ],
@@ -118,11 +118,11 @@
       "node_modules/@videojs/core/dist/default/i18n/locales/zh.js"
     ]
   },
-  "_volume-yJQeGK5m.js": {
-    "file": "assets/volume-yJQeGK5m.js",
+  "_volume-Bxc7Azyc.js": {
+    "file": "assets/volume-Bxc7Azyc.js",
     "name": "volume",
     "imports": [
-      "_preload-helper-odF-skvc.js",
+      "_preload-helper-DclECHGd.js",
       "_media-target-DOhxUIFT.js",
       "_predicate-DKs7lvvm.js",
       "_webkit-CikxgAon.js"
@@ -139,12 +139,12 @@
     ]
   },
   "node_modules/@videojs/core/dist/default/dom/store/parse-vtt.js": {
-    "file": "assets/parse-vtt-De4RjKbX.js",
+    "file": "assets/parse-vtt-BcmHPFjf.js",
     "name": "parse-vtt",
     "src": "node_modules/@videojs/core/dist/default/dom/store/parse-vtt.js",
     "isDynamicEntry": true,
     "imports": [
-      "_volume-yJQeGK5m.js"
+      "_volume-Bxc7Azyc.js"
     ]
   },
   "node_modules/@videojs/core/dist/default/i18n/locales/ar.js": {
@@ -472,21 +472,21 @@
     ]
   },
   "resources/js/addon.js": {
-    "file": "assets/addon-Da8dK80F.js",
+    "file": "assets/addon-CCj0ohiZ.js",
     "name": "addon",
     "src": "resources/js/addon.js",
     "isEntry": true,
     "imports": [
-      "_preload-helper-odF-skvc.js"
+      "_preload-helper-DclECHGd.js"
     ],
     "dynamicImports": [
-      "_player-CY5Ehi79.js",
-      "_skin-Jyn8UqMu.js",
+      "_player-5U9D4FLO.js",
+      "_skin-UwbBeVOs.js",
       "_mux-video-DLntgmvF.js",
       "_mux-uploader-Wc6-4rub.js"
     ],
     "css": [
-      "assets/addon-CjOSQ6hX.css"
+      "assets/addon-D1v-RIPS.css"
     ]
   },
   "resources/js/player-mux-data.js": {
@@ -500,13 +500,13 @@
     ]
   },
   "resources/js/player.js": {
-    "file": "assets/player-C6NRfwFk.js",
+    "file": "assets/player-qHAiz0Jx.js",
     "name": "player",
     "src": "resources/js/player.js",
     "isEntry": true,
     "imports": [
-      "_player-CY5Ehi79.js",
-      "_skin-Jyn8UqMu.js",
+      "_player-5U9D4FLO.js",
+      "_skin-UwbBeVOs.js",
       "_mux-video-DLntgmvF.js"
     ]
   }

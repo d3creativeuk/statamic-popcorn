@@ -25,6 +25,16 @@ export default defineConfig({
             },
         }),
     ],
+    // The build is served from wherever a site publishes it
+    // (vendor/statamic-popcorn/build), not from /build/, the base the Laravel
+    // plugin gives it. Imports between chunks are relative anyway, but Vite's
+    // preload hints for them were not: they asked for /build/assets/..., which
+    // 404s on every site. Relative URLs work wherever the files end up.
+    experimental: {
+        renderBuiltUrl(filename, { hostType }) {
+            return hostType === 'js' ? { relative: true } : undefined;
+        },
+    },
     build: {
         // Video.js with hls.js is about 1.2 MB. It is only fetched when a
         // Popcorn field is on screen, never with the rest of the Control Panel.

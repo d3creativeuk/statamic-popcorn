@@ -8,6 +8,11 @@ This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) an
 
 ## [Unreleased]
 
+### Fixed
+
+- The play button in the field's preview did nothing on a page's first load. The player went on the page before its scripts had loaded, and its elements upgraded in an order that left the controls unconnected to the video. It is now added once all three are defined.
+- Every page with a Popcorn field logged a 404 for each player file. Vite's preload hints asked for them at `/build/assets/`, not where a site publishes them (`vendor/statamic-popcorn/build`). The video still played, as the imports themselves were relative; the hints now are too.
+
 ## [1.0.1] - 2026-11-23
 
 ### Added

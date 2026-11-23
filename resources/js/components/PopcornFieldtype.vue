@@ -40,6 +40,12 @@ const browsing = ref(false);
 const picking = ref(false);
 // Bumped to remount the player once a processing video is ready.
 const playerKey = ref(0);
+// The player's three elements only go on the page once all three are
+// defined. Rendered earlier, they upgrade in whatever order their modules
+// finish loading, and when <mux-video> or the skin upgrades before
+// <video-player> the controls never find the media: the play button does
+// nothing, though the video itself has loaded.
+const playerReady = ref(false);
 const uploaderReady = ref(false);
 // The drop zone and file button find their uploader by id, and an entry can
 // hold several Popcorn fields, so each field has its own.
@@ -51,7 +57,9 @@ let timer = null;
 let unmounted = false;
 
 onMounted(() => {
-    loadPlayer();
+    loadPlayer().then(() => {
+        if (!unmounted) playerReady.value = true;
+    });
 });
 
 onBeforeUnmount(() => {
@@ -303,7 +311,7 @@ function remove() {
         <!-- A video is chosen -->
         <div v-if="hasVideo" class="space-y-3">
             <div class="popcorn-player">
-                <video-player :key="playerKey">
+                <video-player v-if="playerReady" :key="playerKey">
                     <video-skin>
                         <mux-video :src="streamUrl" playsinline crossorigin="anonymous" />
                     </video-skin>
