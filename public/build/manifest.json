@@ -472,7 +472,7 @@
     ]
   },
   "resources/js/addon.js": {
-    "file": "assets/addon-BfbI4ie8.js",
+    "file": "assets/addon-Da8dK80F.js",
     "name": "addon",
     "src": "resources/js/addon.js",
     "isEntry": true,
@@ -486,7 +486,7 @@
       "_mux-uploader-Wc6-4rub.js"
     ],
     "css": [
-      "assets/addon-1eSY-mTe.css"
+      "assets/addon-CjOSQ6hX.css"
     ]
   },
   "resources/js/player-mux-data.js": {

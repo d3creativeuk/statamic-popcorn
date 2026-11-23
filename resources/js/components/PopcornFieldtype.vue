@@ -446,6 +446,13 @@ function remove() {
     height: 100%;
 }
 
+/* The box above clips the corners to 0.5rem. Left at the skin's own 28px,
+   the video was rounded more than the box, and the box's dark background
+   showed in each corner. */
+.popcorn-player video-skin {
+    --media-border-radius: 0;
+}
+
 .popcorn-player__notice {
     position: absolute;
     inset: auto 0 0 0;
